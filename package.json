@@ -1,0 +1,24 @@
+{
+  "name": "sieve",
+  "version": "0.1.0",
+  "description": "Portable, file-based agent protocol and skill library that installs in one command and works across coding agents.",
+  "type": "module",
+  "bin": {
+    "sieve": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "scripts/",
+    "skills/",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "sieve.index.json"
+  ],
+  "scripts": {
+    "validate": "node scripts/validate-skill.mjs --all"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

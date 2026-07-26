@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "name": "sieve",
+  "version": "0.1.0",
+  "skills": [
+    {
+      "name": "grill-me",
+      "type": "skill-md",
+      "description": "Interrogate a rough idea before any code gets written, one question at a time, until the plan has edges.",
+      "url": "skills/planning/grill-me/SKILL.md",
+      "category": "planning",
+      "tier": "catalog",
+      "tags": ["planning", "requirements", "discovery"],
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-25",
+      "status": "active"
+    },
+    {
+      "name": "acknowledge-project",
+      "type": "skill-md",
+      "description": "Absorb and confirm the current state of an existing project before proposing or changing anything.",
+      "url": "skills/planning/acknowledge-project/SKILL.md",
+      "category": "planning",
+      "tier": "catalog",
+      "tags": ["planning", "context", "onboarding"],
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-25",
+      "status": "active"
+    },
+    {
+      "name": "test-driven-development",
+      "type": "skill-md",
+      "description": "Enforce red, green, refactor on every implementation task. A guardrail, active by default.",
+      "url": "skills/testing/test-driven-development/SKILL.md",
+      "category": "testing",
+      "tier": "guardrail",
+      "tags": ["testing", "guardrail", "quality"],
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-25",
+      "status": "active"
+    },
+    {
+      "name": "requesting-code-review",
+      "type": "skill-md",
+      "description": "Review work against the plan between tasks and report issues by severity. A guardrail, active by default.",
+      "url": "skills/review/requesting-code-review/SKILL.md",
+      "category": "review",
+      "tier": "guardrail",
+      "tags": ["review", "guardrail", "quality"],
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-25",
+      "status": "active"
+    }
+  ]
+}
