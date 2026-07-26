@@ -1,5 +1,7 @@
 # Sieve: Handoff for Claude Code
 
+Status: historical. This was the original handoff written at the start of the build; every step in "Step by step" below is now complete, including the ones once marked stage 2. For current state, read `PROGRESS.md` and `NEXT.md` instead. Kept here for the reasoning, not as a live task list.
+
 Read this file fully before doing anything. It carries the reasoning behind Sieve, not just the what. Several design choices below look like gaps but are deliberate. Do not "fix" them without asking. This document uses no em dashes, matching the project's writing convention; keep it that way in anything you write here.
 
 ## What Sieve is, in one line
@@ -34,13 +36,11 @@ The same class of problem, knowledge walking out the door when a person or a too
 
 ## What is deliberately NOT built yet (do not build without asking)
 
-These are staged on purpose. Building them before the defaults prove out in real use is the exact scope creep the design avoids.
+These are staged on purpose. Building them before the defaults prove out in real use is the exact scope creep the design avoids. Everything once listed here as "stage 2" (full `sieve init` scaffolding, npm publish, the `check` command) has since shipped; what remains deferred is narrower:
 
-- **Full `sieve init` scaffolding into a target repo.** Currently stubbed. It should eventually copy AGENTS.md plus skills into a target project, run bridge, and write a lockfile. Stage 2.
-- **npm publish** so `npx sieve init` works for strangers. Stage 2.
 - **PreToolUse hook enforcement** (making TDD a mechanical wall on Claude Code). Deferred until the guidance version has been lived with and it is clear which guardrail is worth making a wall. Higher stakes because it can block real work.
 - **SessionStart hook** for auto-loading the protocol. Low risk, worth building early, but Claude Code only, so it is the ceiling not the floor.
-- **The staleness `check` command, growth loop automation, and any dashboard.** Stage 3. These need weeks of real HISTORY.jsonl data to be worth building; building now means guessing at what they should show.
+- **Growth loop automation and any dashboard.** The `check` command itself is built and reports catalog health today; automation that acts on those reports, and any observability dashboard, need weeks of real `HISTORY.jsonl` data to be worth building. Building now means guessing at what they should show.
 
 ## Current state (what exists in the repo)
 
@@ -49,47 +49,60 @@ sieve/
 ├── AGENTS.md            source of truth: fork, guardrails, selection, gate, continuity, reload
 ├── CLAUDE.md            @AGENTS.md import bridge
 ├── README.md            inverted-pyramid, install above the fold
-├── package.json         bin: sieve, npx-ready
-├── bin/cli.js           validate + bridge work; init/check stubbed
+├── package.json         bin: sieve, published to npm as sievekit
+├── bin/cli.js           init, validate, bridge, check all implemented
 ├── sieve.index.json     catalog index, agentskills.io 0.2.0 field shape
 ├── scripts/
 │   ├── validate-skill.mjs   the validation gate (real code, tested)
-│   └── bridge.mjs           writes pointer files for non-AGENTS.md agents
+│   ├── bridge.mjs           writes pointer files for non-AGENTS.md agents
+│   ├── init.mjs             scaffolds Sieve into a target project
+│   ├── check.mjs            reports catalog staleness and growth-loop inputs
+│   └── test-cli.mjs         CLI self-tests, run via npm test
 ├── PROGRESS.md          continuity, seeded
-├── HISTORY.jsonl        structured event log, seeded
+├── HISTORY.jsonl        structured event log
+├── PROPOSED.md          growth-loop input: skills the catalog is missing
+├── STALE.md             growth-loop input: skills flagged wrong or outdated
 ├── skills/
 │   ├── planning/grill-me/SKILL.md
 │   ├── planning/acknowledge-project/SKILL.md
+│   ├── planning/writing-plans/SKILL.md
 │   ├── testing/test-driven-development/SKILL.md
-│   └── review/requesting-code-review/SKILL.md
+│   ├── review/requesting-code-review/SKILL.md
+│   ├── debugging/systematic-debugging/SKILL.md
+│   └── verification/verification-before-completion/SKILL.md
+├── templates/           design-doc.md, progress.md
+├── docs/design/         design docs, e.g. sieve.md (this project's own)
+├── LICENSE, CONTRIBUTING.md, .github/   publish and contribution scaffolding
 └── staging/README.md    contrib lane
 ```
 
-Verified working: all four skills pass `node bin/cli.js validate`; the validate gate correctly rejects a bad skill and exits nonzero; `node bin/cli.js bridge` writes pointer files for Claude Code, Gemini CLI, Copilot, Cursor, and Windsurf; `bridge --detect` writes only for agents whose config dirs exist.
+Verified working: all seven skills pass `node bin/cli.js validate`; the validate gate correctly rejects a bad skill and exits nonzero; `node bin/cli.js bridge` writes pointer files for Claude Code, Gemini CLI, Copilot, Cursor, and Windsurf; `bridge --detect` writes only for agents whose config dirs exist; `node bin/cli.js init` scaffolds a fresh directory into a working project that itself passes validate; `node bin/cli.js check` reports catalog health; `sievekit` is live on npm and `npx sievekit init` works end to end.
 
 ## Step by step: what to do, in order
 
-### Step 1: push to a repo (needs the user's git auth)
+All five steps below are complete. Left in place as the record of what was done and why, not as a pending task list.
+
+### Step 1: push to a repo (needs the user's git auth) — done
 1. Confirm `gh` is installed and authenticated (`gh auth status`), or that the user has created an empty GitHub repo named `sieve`.
 2. If using gh: `gh repo create sieve --private --source=. --remote=origin` (adjust visibility as the user prefers). Otherwise add the remote manually.
 3. `git init && git add . && git commit -m "Sieve foundation: cross-agent protocol, skill catalog, validate + bridge"`
 4. `git branch -M main && git push -u origin main`
 5. Report the repo URL back.
 
-### Step 2: verify the foundation
+### Step 2: verify the foundation — done
 1. `node bin/cli.js validate` (expect all 4 skills OK, exit 0).
 2. `node bin/cli.js bridge --detect` (writes pointer files for detected agents only).
 3. Confirm AGENTS.md is under 100 lines.
 
-### Step 3: set up cheap enforcement (high value, low risk)
+### Step 3: set up cheap enforcement (high value, low risk) — done
 1. Add a GitHub Action at `.github/workflows/validate.yml` that runs `node bin/cli.js validate` on every push and PR. This is the first place guidance becomes enforcement for free. Do not skip validation on failure; a broken skill should fail the build.
 2. Optionally add a pre-commit hook running the same check.
 
-### Step 4: the real test (do this before any Stage 2 work)
+### Step 4: the real test (do this before any Stage 2 work) — done
 1. A user who did not build Sieve installs it into their own repo with one command and uses it for a few sessions. This is the eval for whether the defaults and the fork work for someone who is not the author.
 2. Do not build Stage 2 until the defaults have survived real use. If they do not hold up, the fix is to improve the skills and AGENTS.md, not to add more machinery.
 
-### Step 5: resolve the one open decision
+### Step 5: resolve the one open decision — done
 The open question in PROGRESS.md: whether to build a PreToolUse hook that mechanically enforces TDD on Claude Code, or stay guidance-only until the catalog proves itself. Surface this to the user; do not decide it unilaterally.
 
 ## How to confirm you carried the idea correctly

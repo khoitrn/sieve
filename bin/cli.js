@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Sieve CLI. Stage 1: `validate` works. `init` and `check` are stubs for Stage 2.
+// Sieve CLI. init, validate, bridge, and check are all fully implemented.
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";

@@ -43,9 +43,11 @@ Guardrails (test-driven development, code review, verification) stay active by d
 - `AGENTS.md`: the protocol. Fork, guardrails, skill selection, approval gate, continuity.
 - `CLAUDE.md`: a one-line bridge that imports `AGENTS.md`.
 - `skills/<category>/<name>/SKILL.md`: the catalog.
-  - planning: `grill-me`, `acknowledge-project`
+  - planning: `grill-me`, `acknowledge-project`, `writing-plans`
   - testing: `test-driven-development`
   - review: `requesting-code-review`
+  - debugging: `systematic-debugging`
+  - verification: `verification-before-completion`
 - `sieve.index.json`: the machine-readable catalog index.
 - `scripts/validate-skill.mjs`: the validation gate for contributed skills.
 - `scripts/init.mjs`: scaffolds Sieve into any project with one command.
@@ -55,15 +57,15 @@ Guardrails (test-driven development, code review, verification) stay active by d
 
 ## Creating a skill
 
-Add `skills/<category>/<name>/SKILL.md` with `name` and `description` frontmatter (the description is the trigger). Keep the body under 500 lines; push detail into `references/`. Then validate:
+Draft `staging/<name>/SKILL.md` with `name` and `description` frontmatter (the description is the trigger). Keep the body under 500 lines; push detail into `references/`. Then validate:
 
 ```
-node scripts/validate-skill.mjs skills/<category>/<name>/SKILL.md
+node bin/cli.js validate staging/<name>/SKILL.md
 ```
 
 ## Contributing
 
-Drop the skill in `staging/`, validate it, and promote it once it passes. See `staging/README.md`.
+Once a staged skill passes validation, promote it: move the folder to `skills/<category>/<name>/` and add an entry to `sieve.index.json`. See `staging/README.md` and `CONTRIBUTING.md`.
 
 ## License
 
