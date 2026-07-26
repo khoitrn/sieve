@@ -74,6 +74,18 @@
       "version": "1.0.0",
       "last_reviewed": "2026-07-26",
       "status": "active"
+    },
+    {
+      "name": "verification-before-completion",
+      "type": "skill-md",
+      "description": "Verify work with evidence before declaring anything done. A guardrail, active by default.",
+      "url": "skills/verification/verification-before-completion/SKILL.md",
+      "category": "verification",
+      "tier": "guardrail",
+      "tags": ["verification", "guardrail", "quality"],
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-26",
+      "status": "active"
     }
   ]
 }

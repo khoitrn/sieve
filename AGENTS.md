@@ -77,3 +77,4 @@ Skills live in `skills/<category>/<name>/SKILL.md`. Reference them, do not paste
 - testing: `test-driven-development`
 - review: `requesting-code-review`
 - debugging: `systematic-debugging`
+- verification: `verification-before-completion`
