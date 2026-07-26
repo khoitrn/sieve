@@ -10,13 +10,18 @@ Stage 1 foundation scaffolded. Standard-conforming file layout in place: thin AG
 
 Foundation commit: AGENTS.md, CLAUDE.md, skills/ (grill-me, acknowledge-project, test-driven-development, requesting-code-review), sieve.index.json, validate-skill.mjs, bin/cli.js stub.
 
+## Decisions (2026-07-26)
+
+- **TDD enforcement stays guidance-only.** No PreToolUse hook yet; too high-stakes to hardcode before the four default skills have survived real use.
+- **Scope pivots to distributable-from-the-start.** Reverses HANDOFF.md's original "personal harness first" bias. Stage 2 (`npx sieve init` full scaffold, npm publish) is now a near-term priority, not gated behind a private real-use test first.
+
 ## Next up
 
-1. Live with the four skills across one real project; confirm the defaults are good before adding more.
+1. CI enforcement: done (`.github/workflows/validate.yml`, green).
 2. Wire the validate script into the staging lane so uploads are checked mechanically.
-3. Stage 2: build out `npx sieve init` agent detection (Claude Code, Codex) and AGENTS.md generation.
+3. Stage 2, now prioritized: build out `npx sieve init` full scaffold (copy AGENTS.md + skills/ into a target repo, write a lockfile) and prep for `npm publish` so it works for strangers.
+4. Still worth doing, no longer gating: live with the four skills on a real project (engenium/TxCR) to sanity-check the defaults, in parallel with distribution work rather than before it.
 
 ## Open questions
 
-- Which enforcement to make mechanical first: a PreToolUse hook for TDD on Claude Code, or keep guidance-only until the catalog has proven itself?
-- Personal harness vs. distributable package: build for me first, open up once defaults hold.
+- None currently open. Both prior open questions were resolved 2026-07-26 (see Decisions above).

@@ -1,1 +1,3 @@
 {"ts":"2026-07-25T00:00:00Z","repo":"sieve","event":"foundation_scaffolded","note":"stage 1 files created"}
+{"ts":"2026-07-26T04:43:00Z","repo":"sieve","event":"ci_added","note":"validate.yml added, first run green"}
+{"ts":"2026-07-26T04:50:00Z","repo":"sieve","event":"decision","note":"TDD enforcement stays guidance-only; scope pivots to distributable-from-the-start, reversing HANDOFF.md personal-harness-first bias"}
