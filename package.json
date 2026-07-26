@@ -4,7 +4,7 @@
   "description": "Portable, file-based agent protocol and skill library that installs in one command and works across coding agents.",
   "type": "module",
   "bin": {
-    "sieve": "./bin/cli.js"
+    "sieve": "bin/cli.js"
   },
   "files": [
     "bin/",
