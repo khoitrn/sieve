@@ -8,11 +8,13 @@ A portable, file-based agent protocol and skill library that installs in one com
 
 ## Install
 
+Scaffold Sieve into any project with one command:
+
 ```
-npx sieve init
+npx sievekit init
 ```
 
-(Stage 2. For now: copy `AGENTS.md`, `CLAUDE.md`, and `skills/` into your project.)
+That copies the protocol and skills in, seeds your project state, and writes pointer files for whichever agents you use. Then open your coding agent in that folder and describe what you want to build.
 
 ## Why Sieve
 
@@ -38,17 +40,18 @@ Guardrails (test-driven development, code review, verification) stay active by d
 
 ## What is inside
 
-- `AGENTS.md` — the protocol. Fork, guardrails, skill selection, approval gate, continuity.
-- `CLAUDE.md` — a one-line bridge that imports `AGENTS.md`.
-- `skills/<category>/<name>/SKILL.md` — the catalog.
+- `AGENTS.md`: the protocol. Fork, guardrails, skill selection, approval gate, continuity.
+- `CLAUDE.md`: a one-line bridge that imports `AGENTS.md`.
+- `skills/<category>/<name>/SKILL.md`: the catalog.
   - planning: `grill-me`, `acknowledge-project`
   - testing: `test-driven-development`
   - review: `requesting-code-review`
-- `sieve.index.json` — the machine-readable catalog index.
-- `scripts/validate-skill.mjs` — the validation gate for contributed skills.
-- `scripts/bridge.mjs` — writes pointer files for agents that do not read `AGENTS.md` natively.
-- `PROGRESS.md`, `HISTORY.jsonl` — continuity and a structured event log.
-- `staging/` — where contributed skills land before validation.
+- `sieve.index.json`: the machine-readable catalog index.
+- `scripts/validate-skill.mjs`: the validation gate for contributed skills.
+- `scripts/init.mjs`: scaffolds Sieve into any project with one command.
+- `scripts/bridge.mjs`: writes pointer files for agents that do not read `AGENTS.md` natively.
+- `PROGRESS.md`, `HISTORY.jsonl`: continuity and a structured event log.
+- `staging/`: where contributed skills land before validation.
 
 ## Creating a skill
 

@@ -4,24 +4,27 @@ Keep this short. It is read at the start of every session. Push detail into refe
 
 ## Current phase
 
-Stage 1 foundation scaffolded. Standard-conforming file layout in place: thin AGENTS.md source of truth, CLAUDE.md bridge, four starter skills, catalog index, validate script, CLI stub.
+npm-publish-ready with the growth loop closed. Universal foundation, six skills, canonical templates, CI (validate + self-tests + line limit), working and pack-tested `sieve init`, `sieve check` for catalog health, per-agent bridges, PROPOSED/STALE capture files, LICENSE, CONTRIBUTING, issue/PR templates. The architecture has no remaining gaps that are not deferred-by-design or owner-only.
 
 ## Last completed
 
-Foundation commit: AGENTS.md, CLAUDE.md, skills/ (grill-me, acknowledge-project, test-driven-development, requesting-code-review), sieve.index.json, validate-skill.mjs, bin/cli.js stub.
+Closed the growth loop: PROPOSED.md and STALE.md capture files (seeded into new projects by init), AGENTS.md protocol lines directing the agent to append usage signals, and a real `sieve check` command that reports stale skills by last_reviewed and pending growth-loop items. Verified from a fresh packed install.
 
-## Decisions (2026-07-26)
+## Next up (owner-only steps)
 
-- **TDD enforcement stays guidance-only.** No PreToolUse hook yet; too high-stakes to hardcode before the four default skills have survived real use.
-- **Scope pivots to distributable-from-the-start.** Reverses HANDOFF.md's original "personal harness first" bias. Stage 2 (`npx sieve init` full scaffold, npm publish) is now a near-term priority, not gated behind a private real-use test first.
+1. Pick the npm package name. `sieve` is likely taken; use a scoped name like `@yourname/sieve` or confirm availability with `npm view sieve`. Replace OWNER in package.json repository/bugs/homepage with the GitHub owner, and the name if scoping.
+2. `npm login`, then `npm publish` (or `npm publish --access public` for a scoped name). The prepublishOnly hook runs the self-tests first.
+3. Install-test as an outside user: `npx <name> init` in a fresh repo, confirm first value without hand-editing.
 
-## Next up
+## Resolved
 
-1. CI enforcement: done (`.github/workflows/validate.yml`, green).
-2. Wire the validate script into the staging lane so uploads are checked mechanically.
-3. Stage 2, now prioritized: build out `npx sieve init` full scaffold (copy AGENTS.md + skills/ into a target repo, write a lockfile) and prep for `npm publish` so it works for strangers.
-4. Still worth doing, no longer gating: live with the four skills on a real project (engenium/TxCR) to sanity-check the defaults, in parallel with distribution work rather than before it.
+- Enforcement is guidance-first for v1; a Claude Code PreToolUse hook is a later optional enhancement, out of scope for release. Reason: it is Claude Code only and Sieve must stay cross-agent.
 
-## Open questions
+## Decision log
 
-- None currently open. Both prior open questions were resolved 2026-07-26 (see Decisions above).
+- 2026-07-25: foundation scaffolded, guidance-first enforcement chosen over mechanical, later stages deferred until defaults prove out.
+- 2026-07-26: added canonical templates and wired them into AGENTS.md; design docs live under docs/design/.
+- 2026-07-26: built core catalog depth (systematic-debugging, writing-plans) plus CI validation.
+- 2026-07-26: reframed the whole project as universal and distributable from the start; built a working init scaffolder, LICENSE, and CONTRIBUTING.
+- 2026-07-26: made the package npm-publish-ready (metadata, self-tests, templates, pack-tested install) and resolved enforcement as guidance-first for v1. Remaining steps require the owner's npm and GitHub accounts.
+- 2026-07-26: closed the growth loop (PROPOSED.md, STALE.md, protocol capture lines, real sieve check). The architecture is now complete except for deferred-by-design pieces (dashboard, enforcement hook) and owner-only steps (publish).

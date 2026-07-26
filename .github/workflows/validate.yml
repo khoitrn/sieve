@@ -2,6 +2,7 @@ name: validate
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 jobs:
@@ -12,4 +13,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - run: node bin/cli.js validate
+      - name: Validate all skills
+        run: node bin/cli.js validate
+      - name: Run CLI self-tests
+        run: npm test
+      - name: Check AGENTS.md stays thin
+        run: |
+          lines=$(wc -l < AGENTS.md)
+          echo "AGENTS.md is $lines lines"
+          if [ "$lines" -gt 100 ]; then
+            echo "AGENTS.md exceeds 100 lines; keep it thin (push detail into referenced files)."
+            exit 1
+          fi

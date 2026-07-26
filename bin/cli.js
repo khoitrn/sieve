@@ -25,18 +25,13 @@ switch (cmd) {
     break;
 
   case "init":
-    // Stage 2: full scaffold. For now it composes what exists: bridges + validate.
-    // Later: copy AGENTS.md + skills/ into a target repo and write skills-lock.json.
-    console.log("sieve init: partial (Stage 2 in progress).");
-    console.log("Run `sieve bridge` to write agent pointer files, and");
-    console.log("`sieve validate` to check skills. Full scaffold-into-target-repo is next.");
-    process.exit(0);
+    // Scaffold Sieve into a target directory (default: current dir).
+    run("scripts/init.mjs", rest);
     break;
 
   case "check":
-    // Stage 3: cached staleness check against last_reviewed and referenced files.
-    console.log("sieve check: not implemented yet (Stage 3).");
-    process.exit(0);
+    // Report stale skills (by last_reviewed) and pending growth-loop items.
+    run("scripts/check.mjs", rest);
     break;
 
   case "-h":
@@ -47,7 +42,7 @@ switch (cmd) {
   validate [path...]   Validate SKILL.md files (default: all in skills/)
   bridge [--detect]    Write pointer files for non-AGENTS.md agents
   init                 Scaffold Sieve into the current project (Stage 2)
-  check                Report stale skills (Stage 3)
+  check [--days N]     Report stale skills and pending growth-loop items
 `);
     process.exit(0);
     break;

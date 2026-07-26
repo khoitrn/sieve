@@ -4,13 +4,13 @@ Read this file fully before doing anything. It carries the reasoning behind Siev
 
 ## What Sieve is, in one line
 
-A portable, file-based agent protocol and skill library that installs in one command and behaves the same across coding agents (Claude Code, Codex, Cursor, Gemini CLI, and others), so working judgment lives in files the owner controls rather than in any single vendor's memory system.
+A portable, file-based agent protocol and skill library that installs in one command and behaves the same across coding agents (Claude Code, Codex, Cursor, Gemini CLI, and others), so working judgment lives in files the developer controls rather than in any single vendor's memory system.
 
 ## The thesis (why this exists)
 
-Agent memory and enforcement are vendor-locked. Auto memory and hooks are Claude Code only; Codex, Gemini, and Cursor each have their own siloed mechanisms. The owner's way of working should not be hostage to one vendor's roadmap or pricing. Sieve relocates the durable layer (protocol, guardrails, skills, project state) into plain files in the repo that every agent reads, and treats each vendor's native machinery (hooks, auto memory) as a removable enhancement layered on top, never the foundation.
+Agent memory and enforcement are vendor-locked. Auto memory and hooks are Claude Code only; Codex, Gemini, and Cursor each have their own siloed mechanisms. A developer's way of working should not be hostage to one vendor's roadmap or pricing. Sieve relocates the durable layer (protocol, guardrails, skills, project state) into plain files in the repo that every agent reads, and treats each vendor's native machinery (hooks, auto memory) as a removable enhancement layered on top, never the foundation.
 
-This is the same problem the owner's company (engenium) solves for humans, knowledge walking out the door when a person leaves, pointed at agents instead of people.
+The same class of problem, knowledge walking out the door when a person or a tool leaves, applies to any team; Sieve points the fix at agents instead of people.
 
 ## The core design, decision by decision
 
@@ -86,7 +86,7 @@ Verified working: all four skills pass `node bin/cli.js validate`; the validate 
 2. Optionally add a pre-commit hook running the same check.
 
 ### Step 4: the real test (do this before any Stage 2 work)
-1. The user will drop AGENTS.md, CLAUDE.md, and skills/ into a real project (engenium or a TxCR repo) and use Sieve for a few sessions. This is the eval for whether the four default skills and the fork are any good.
+1. A user who did not build Sieve installs it into their own repo with one command and uses it for a few sessions. This is the eval for whether the defaults and the fork work for someone who is not the author.
 2. Do not build Stage 2 until the defaults have survived real use. If they do not hold up, the fix is to improve the skills and AGENTS.md, not to add more machinery.
 
 ### Step 5: resolve the one open decision
@@ -96,7 +96,7 @@ The open question in PROGRESS.md: whether to build a PreToolUse hook that mechan
 
 Before writing code, read AGENTS.md, PROGRESS.md, and this file, then summarize back to the user: what Sieve is, what is done, and what is next. The summary must show you understand three things:
 1. This is an existing project (Path B), not a new idea.
-2. The thesis is portability and owner-controlled files, escaping vendor lock.
+2. The thesis is portability and developer-controlled files, escaping vendor lock.
 3. The thin AGENTS.md, the guidance-first enforcement, and the stubbed Stage 2/3 are intentional, not bugs to fix.
 
 If your summary gets any of these wrong, stop and re-read. Getting this right is the whole point of the handoff.

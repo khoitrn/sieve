@@ -50,6 +50,30 @@
       "version": "1.0.0",
       "last_reviewed": "2026-07-25",
       "status": "active"
+    },
+    {
+      "name": "systematic-debugging",
+      "type": "skill-md",
+      "description": "Find the root cause of a bug through a disciplined four-phase process instead of guessing.",
+      "url": "skills/debugging/systematic-debugging/SKILL.md",
+      "category": "debugging",
+      "tier": "catalog",
+      "tags": ["debugging", "root-cause", "quality"],
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-26",
+      "status": "active"
+    },
+    {
+      "name": "writing-plans",
+      "type": "skill-md",
+      "description": "Break an approved design into small, verifiable tasks an unsupervised agent can execute without drifting.",
+      "url": "skills/planning/writing-plans/SKILL.md",
+      "category": "planning",
+      "tier": "catalog",
+      "tags": ["planning", "execution"],
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-26",
+      "status": "active"
     }
   ]
 }

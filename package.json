@@ -1,5 +1,5 @@
 {
-  "name": "sieve",
+  "name": "sievekit",
   "version": "0.1.0",
   "description": "Portable, file-based agent protocol and skill library that installs in one command and works across coding agents.",
   "type": "module",
@@ -10,15 +10,41 @@
     "bin/",
     "scripts/",
     "skills/",
+    "templates/",
     "AGENTS.md",
     "CLAUDE.md",
-    "sieve.index.json"
+    "sieve.index.json",
+    "LICENSE",
+    "CONTRIBUTING.md"
   ],
   "scripts": {
-    "validate": "node scripts/validate-skill.mjs --all"
+    "validate": "node scripts/validate-skill.mjs --all",
+    "init": "node scripts/init.mjs",
+    "test": "node scripts/test-cli.mjs",
+    "prepublishOnly": "node scripts/test-cli.mjs"
   },
+  "keywords": [
+    "agent",
+    "agents",
+    "skills",
+    "agents-md",
+    "claude-code",
+    "codex",
+    "coding-agent",
+    "ai",
+    "protocol",
+    "harness"
+  ],
   "engines": {
     "node": ">=18"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khoitrn/sieve.git"
+  },
+  "bugs": {
+    "url": "https://github.com/khoitrn/sieve/issues"
+  },
+  "homepage": "https://github.com/khoitrn/sieve#readme"
 }
