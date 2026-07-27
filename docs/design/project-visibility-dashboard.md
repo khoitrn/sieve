@@ -38,8 +38,18 @@ Owner decides local-only vs. hosted before any real build starts. The mock itsel
 
 ## Open questions
 
-- Local-only render (one command, opens a browser tab on the owner's machine) vs. something reachable with no repo access (needs real hosting) — unresolved, decides the architecture.
+- Local-only render (one command, opens a browser tab on the owner's machine) vs. something reachable with no repo access (needs real hosting) — still owner's call, but see Research below: the closest existing analogues both default to local-first and treat hosting as an optional later tier, not the starting design.
 - Sequencing against the ECC evaluation: does the ECC study (provenance/origin metadata, the "instinct" system, `dashboard-builder`'s operator-questions framing, `skill-stocktake`'s quality-audit pattern) change the dashboard's shape before it's built, or is it a separate track? Currently being evaluated in that order — ECC functionality second.
+
+## Research (2026-07-27)
+
+Checked whether this idea already exists. It doesn't, in this exact shape — two adjacent categories exist instead:
+
+- **Live hook-based observability dashboards** for Claude Code — [claude-code-hooks-multi-agent-observability](https://github.com/disler/claude-code-hooks-multi-agent-observability), [Claude-Code-Agent-Monitor](https://github.com/hoangsonww/Claude-Code-Agent-Monitor), [agents-observe](https://github.com/simple10/agents-observe). These stream live hook events (PreToolUse, SessionStart, etc.) through a running local server (Bun/Node + SQLite + WebSocket) to a real-time dashboard (timelines, pulse charts, swim lanes). Built for engineers debugging concurrent agent runs, not a static at-a-glance view for a non-technical viewer. Needs a running pipeline, not a read of flat files — heavier than sieve's file-based pitch. Confirmed default deployment model for both is local-only, no accounts; hosted/multi-user is an optional later add-on, not the starting design.
+- **Skill marketplaces/registries** — [skills-marketplace](https://github.com/dukelyuu/skills-marketplace), [skills-hub-registry](https://github.com/tinh2/skills-hub-registry), [agent-skills](https://github.com/tech-leads-club/agent-skills). Confirmed directly (fetched skills-hub-registry's README): these are catalog/discovery infrastructure only — "no usage analytics, per-project telemetry, or per-user visibility features." They answer "what's installable," never "what's actually used in this project."
+- LLM observability platforms (Langfuse, LangSmith, Helicone) track real tool-call usage but at trace/token/cost level for arbitrary LLM apps, and require either self-hosting a real backend or a hosted account — not a read of a lightweight file-based catalog like `sieve.index.json`.
+
+Conclusion: the gap this mock targets — flat-file-scoped, GitHub-repo view of skill/guardrail health and protocol shape, legible without a CLI — is real and unclaimed. Design-best-practice research independently converged on the same framing as ECC's `dashboard-builder` skill: organize around real operator questions (healthy / what changed / where's the drift), inverted-pyramid (summary first, drill down), not a wall of metrics — which is what the mock already does.
 
 ## Decision log
 
