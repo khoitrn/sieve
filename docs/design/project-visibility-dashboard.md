@@ -1,10 +1,10 @@
 # Design doc: project-visibility-dashboard
 
-Status: draft
+Status: shipped (v1)
 Path: feature on existing project
 Last updated: 2026-07-27
 
-The six fields below are the output of the grill. Context and tools are pre-filled from the project; goal, loop, and verification are still open — this is a pre-phase idea, not an approved build.
+The six fields below are the output of the grill. Shipped as `github.com/khoitrn/sieve-dashboard`, live at https://sieve-dashboard.pages.dev — see the decision log below for what was actually built.
 
 ## 1. Goal
 
@@ -65,3 +65,4 @@ Still pre-phase — no build decision made. The hosting-scope question is now in
 ## Decision log
 
 - 2026-07-27: built a static concept mock to react to before committing to an architecture; approved as directionally right. No build decision made yet — captured here instead of proceeding on a guess.
+- 2026-07-27: owner resolved the hosting-scope question: hosted website, public repos only (no GitHub auth in scope for now). Built as a separate repo, `github.com/khoitrn/sieve-dashboard`, live at https://sieve-dashboard.pages.dev. Static-export Next.js (matches thedeejay-web's Cloudflare Pages pattern) with all GitHub reads happening client-side against `raw.githubusercontent.com` — no backend, no accounts, no stored data, closer to "plain files you own" than the original server-fetch design would have been. An unconnected repo (tested against `khoitrn/khoitrn-web`) renders the honest empty state as designed, not fabricated numbers. Private-repo support (foxy, aerie) is deliberately out of scope until there's a reason to add GitHub auth.
