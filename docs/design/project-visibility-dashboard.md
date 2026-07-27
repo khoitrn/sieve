@@ -51,6 +51,17 @@ Checked whether this idea already exists. It doesn't, in this exact shape — tw
 
 Conclusion: the gap this mock targets — flat-file-scoped, GitHub-repo view of skill/guardrail health and protocol shape, legible without a CLI — is real and unclaimed. Design-best-practice research independently converged on the same framing as ECC's `dashboard-builder` skill: organize around real operator questions (healthy / what changed / where's the drift), inverted-pyramid (summary first, drill down), not a wall of metrics — which is what the mock already does.
 
+## Mock v2 (2026-07-27)
+
+Rebuilt the mock at the same URL to fold the research in directly, rather than leaving it as a written note only:
+
+- Added an explicit "Local · reads files, no account" badge — makes the local-first-by-default precedent a visible product decision, not an implicit assumption.
+- Replaced the "Bridged agents" stat tile with "Guardrails intact (3/3)" — an operator question (are the always-on checks still there?), not a headcount; bridge info still lives in the architecture panel's badges.
+- Added dual-channel color coding on skill rows: a left-border stripe per domain (planning/testing/review/debugging/verification), independent of the existing tier chip (catalog/guardrail), with a legend. Adapted from `claude-code-hooks-multi-agent-observability`'s app-color + session-color pattern.
+- Footer now states the local-first rationale explicitly instead of leaving it unexplained.
+
+Still pre-phase — no build decision made. The hosting-scope question is now informed by precedent but not formally closed.
+
 ## Decision log
 
 - 2026-07-27: built a static concept mock to react to before committing to an architecture; approved as directionally right. No build decision made yet — captured here instead of proceeding on a guess.
