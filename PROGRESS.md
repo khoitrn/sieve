@@ -4,16 +4,17 @@ Keep this short. It is read at the start of every session. Push detail into refe
 
 ## Current phase
 
-Published and audited. Seven skills (including verification-before-completion, added to close an audit gap), canonical templates, CI (validate + self-tests + line limit), working and pack-tested `sieve init`, `sieve check` for catalog health, per-agent bridges, PROPOSED/STALE capture files, LICENSE, CONTRIBUTING, issue/PR templates. Published to npm as `sievekit@0.1.0`; `github.com/khoitrn/sieve` is public. A full doc-vs-code audit against the architecture diagram found and closed two real gaps (missing guardrail skill, stale docs). Code and docs are fully aligned; only the diagram image itself is stale, pending a manual re-export.
+Published and audited (seven skills, CI, `sieve init`/`sieve check`, per-agent bridges, growth-loop capture files). Alongside that, a new feature idea is now in pre-phase evaluation: project-visibility ("what skills are being used, for a non-technical viewer, maybe GitHub-connected"). A static concept mock was built and approved as directionally right; no build decision yet. See `docs/design/project-visibility-dashboard.md`.
 
 ## Last completed
 
-Ran an end-to-end audit against the architecture diagram, docs/design/sieve.md, AGENTS.md, and HANDOFF.md. Added the missing verification-before-completion guardrail skill (matching the shape of the other two guardrails) and indexed it. Synced HANDOFF.md, bin/cli.js's header comment, and README.md to current reality (all were describing a superseded Stage 1 state or undercounting the catalog).
+Built and reviewed a static concept mock of a project-visibility dashboard (repo picker, skill usage panel, protocol architecture diagram, agent-bridge badges, real HISTORY.jsonl tail): https://claude.ai/code/artifact/34c328d6-28a6-435f-b1eb-0036ca9711d1. Reaction: "this is the pre-phase of my idea."
 
 ## Next up
 
-1. Owner to re-export the diagram (source lives outside this repo; the shipped file is a flattened PNG at `~/Downloads/sieve_architecture_v5_shipped.png` with no Mermaid/Excalidraw/drawio source to edit programmatically). Two fixes needed in the next export: drop the tier-check claim from the maintenance-lane "Validate" box (validator only checks frontmatter + dedupe; tier lives solely in `sieve.index.json`), and rename the contrib lane from "Staging (contrib/)" to "Staging (staging/)" to match the real directory.
-2. Real outside-user test remains open: someone who did not build Sieve running `npx sievekit init` cold, with no explanation. Still owner-only; nothing further to build until this returns signal.
+1. Evaluating two things in order: (a) the project-visibility dashboard idea — open question is local-only render vs. something needing real hosting, see `docs/design/project-visibility-dashboard.md`; (b) `github.com/affaan-m/ecc` for functionality worth adapting in sieve-sized form (skill provenance/origin metadata, the "instinct" learned-preference system, `dashboard-builder`'s operator-questions framing, `skill-stocktake`'s quality-audit pattern) — not a wholesale import, ECC's 268-skill maximalist catalog runs counter to sieve's grow-by-use design.
+2. Owner to re-export the architecture diagram (source lives outside this repo; the shipped file is a flattened PNG at `~/Downloads/sieve_architecture_v5_shipped.png` with no Mermaid/Excalidraw/drawio source to edit programmatically). Two fixes needed in the next export: drop the tier-check claim from the maintenance-lane "Validate" box, and rename the contrib lane from "Staging (contrib/)" to "Staging (staging/)".
+3. Real outside-user test remains open: someone who did not build Sieve running `npx sievekit init` cold, with no explanation. Still owner-only; nothing further to build until this returns signal.
 
 ## Resolved
 
@@ -30,3 +31,4 @@ Ran an end-to-end audit against the architecture diagram, docs/design/sieve.md, 
 - 2026-07-26: published to npm as `sievekit` (name `sieve` was taken), made `github.com/khoitrn/sieve` public, verified with a live `npx sievekit init` install test.
 - 2026-07-26: ran a full docs-vs-diagram-vs-code audit. Added the missing verification-before-completion skill and indexed it. Synced HANDOFF.md, bin/cli.js, and README.md to current reality. The tier-validation gap (diagram claims a check the validator does not perform) is unresolved pending an owner decision on whether to fix the diagram or the validator.
 - 2026-07-26: owner decided to fix the diagram, not the validator (tier check stays out of code). Blocked on a manual re-export since the shipped PNG has no editable source; two label fixes queued for that pass (drop tier claim, fix "contrib/" → "staging/").
+- 2026-07-27: opened a new feature evaluation (project-visibility dashboard) rather than treating the deferred-dashboard decision as final; a static mock was built first instead of designing against no data. Sequenced ahead of the ECC functionality study, per owner's stated order.
