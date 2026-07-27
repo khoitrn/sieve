@@ -11,3 +11,4 @@
 {"ts":"2026-07-26T02:02:00Z","repo":"sieve","event":"decision","note":"enforcement guidance-first for v1, hook out of scope"}
 {"ts":"2026-07-26T03:00:00Z","repo":"sieve","event":"growth_loop_closed","note":"PROPOSED.md, STALE.md, sieve check, protocol capture lines"}
 {"ts":"2026-07-26T16:25:49Z","repo":"sieve","event":"audit_fixes","note":"added missing verification-before-completion guardrail skill (7th skill, indexed); synced HANDOFF.md, bin/cli.js header comment, README.md skill list and staging guidance to current reality; tier-validation gap left open pending owner decision"}
+{"ts":"2026-07-26T17:00:00Z","repo":"sieve","event":"decision","note":"tier-validation gap resolved as diagram-only fix, not a validator change; blocked on manual PNG re-export, owner-only"}
