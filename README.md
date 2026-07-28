@@ -48,6 +48,7 @@ Guardrails (test-driven development, code review, verification) stay active by d
   - review: `requesting-code-review`
   - debugging: `systematic-debugging`
   - verification: `verification-before-completion`
+  - maintenance: `skill-stocktake`
 - `sieve.index.json`: the machine-readable catalog index.
 - `scripts/validate-skill.mjs`: the validation gate for contributed skills.
 - `scripts/init.mjs`: scaffolds Sieve into any project with one command.

@@ -13,6 +13,7 @@ triggers:
   - "new idea"
 tags: [planning, requirements, discovery]
 last_reviewed: 2026-07-25
+origin: sieve
 ---
 
 # Grill me

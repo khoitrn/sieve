@@ -12,6 +12,7 @@ triggers:
   - "plan the implementation"
 tags: [planning, execution]
 last_reviewed: 2026-07-26
+origin: sieve
 ---
 
 # Writing plans

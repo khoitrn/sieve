@@ -13,6 +13,7 @@ triggers:
   - "mark this complete"
 tags: [verification, guardrail, quality]
 last_reviewed: 2026-07-26
+origin: sieve
 ---
 
 # Verification before completion

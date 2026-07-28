@@ -12,6 +12,7 @@ triggers:
   - "build the feature"
 tags: [testing, guardrail, quality]
 last_reviewed: 2026-07-25
+origin: sieve
 ---
 
 # Test-driven development

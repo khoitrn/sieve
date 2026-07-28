@@ -13,6 +13,7 @@ triggers:
   - "existing project"
 tags: [planning, context, onboarding]
 last_reviewed: 2026-07-25
+origin: sieve
 ---
 
 # Acknowledge project

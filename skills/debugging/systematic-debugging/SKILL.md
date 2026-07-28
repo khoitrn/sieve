@@ -13,6 +13,7 @@ triggers:
   - "investigate the error"
 tags: [debugging, root-cause, quality]
 last_reviewed: 2026-07-26
+origin: sieve
 ---
 
 # Systematic debugging

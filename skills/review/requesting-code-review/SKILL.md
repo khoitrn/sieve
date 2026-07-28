@@ -11,6 +11,7 @@ triggers:
   - "before the next task"
 tags: [review, guardrail, quality]
 last_reviewed: 2026-07-25
+origin: sieve
 ---
 
 # Requesting code review

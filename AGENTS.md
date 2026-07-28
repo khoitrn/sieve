@@ -68,6 +68,7 @@ The catalog grows by use. When work reveals a gap, capture it instead of letting
 - If a task needed a skill the catalog does not have, append one line to `PROPOSED.md`. Do not improvise a permanent skill mid-task; capture the need and move on.
 - If an existing skill was wrong, outdated, or misfired, append one line to `STALE.md` rather than fixing it silently.
 - Run `sieve check` on a cadence to surface stale skills (by `last_reviewed`) and pending items. Triage is a human step: revise, promote, or archive.
+- Periodically load `skill-stocktake` for the judgment pass `sieve check` cannot do on its own: overlap, currency, and usage, each skill given a verdict with a reason.
 
 ## Local skills
 
@@ -78,3 +79,4 @@ Skills live in `skills/<category>/<name>/SKILL.md`. Reference them, do not paste
 - review: `requesting-code-review`
 - debugging: `systematic-debugging`
 - verification: `verification-before-completion`
+- maintenance: `skill-stocktake`

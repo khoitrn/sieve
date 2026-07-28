@@ -11,7 +11,7 @@ Two files capture signals from real sessions: `PROPOSED.md` (a skill the catalog
 ## Adding a skill
 
 1. **Draft it in staging.** Create `staging/<name>/SKILL.md`. Do not put it in `skills/` directly.
-2. **Follow the shape.** Required frontmatter is `name` and `description`. The description is the trigger: say what the skill does and when to use it, with the phrases a user would type. Keep the body under 500 lines; push detail into a `references/` folder next to the skill.
+2. **Follow the shape.** Required frontmatter is `name` and `description`. The description is the trigger: say what the skill does and when to use it, with the phrases a user would type. Keep the body under 500 lines; push detail into a `references/` folder next to the skill. Add `origin: <who or where this came from>` (e.g. `sieve`, `community`, or a name) so a skill-stocktake pass can weigh contribution history, not just content.
 3. **Validate it.**
    ```
    node bin/cli.js validate staging/<name>/SKILL.md
