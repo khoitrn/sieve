@@ -14,7 +14,9 @@ Scaffold Sieve into any project with one command:
 npx sievekit init
 ```
 
-That copies the protocol and skills in, seeds your project state, and writes pointer files for whichever agents you use. Then open your coding agent in that folder and describe what you want to build.
+That asks two short questions (new idea or existing project, any focus areas), asks the [Sieve registry](https://github.com/khoitrn/sieve-registry) which skills fit, and installs just that shortlist plus the always-on guardrails — not the whole catalog. It seeds your project state and writes pointer files for whichever agents you use. Then open your coding agent in that folder and describe what you want to build.
+
+No registry, no problem: if it's unreachable (offline, self-hosting, whatever), `init` falls back to installing the full bundled catalog automatically — Sieve stays a plain, portable, file-based layer either way. Prefer that path outright, e.g. for CI or scripted use? `npx sievekit init --all` (or `--offline`) skips the interview and the network call entirely.
 
 ## Why Sieve
 
@@ -51,10 +53,12 @@ Guardrails (test-driven development, code review, verification) stay active by d
   - maintenance: `skill-stocktake`
 - `sieve.index.json`: the machine-readable catalog index.
 - `scripts/validate-skill.mjs`: the validation gate for contributed skills.
-- `scripts/init.mjs`: scaffolds Sieve into any project with one command.
+- `scripts/onboard.mjs`: the default `init` path — interview, registry pull, offline fallback.
+- `scripts/init.mjs`: the `--all`/`--offline` path — full bundled catalog, no prompts, no network.
 - `scripts/bridge.mjs`: writes pointer files for agents that do not read `AGENTS.md` natively.
 - `PROGRESS.md`, `HISTORY.jsonl`: continuity and a structured event log.
 - `staging/`: where contributed skills land before validation.
+- `.sieve/project.json` (written into the *target* project, not this repo): the project's id and which skills were pulled, at what version — input for a future `sieve check --updates`.
 
 ## Creating a skill
 

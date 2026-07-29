@@ -24,10 +24,15 @@ switch (cmd) {
     run("scripts/bridge.mjs", rest);
     break;
 
-  case "init":
-    // Scaffold Sieve into a target directory (default: current dir).
-    run("scripts/init.mjs", rest);
+  case "init": {
+    // Default: interactive onboarding (interview + registry-recommended shortlist).
+    // --all / --offline: old behavior, copy the whole bundled catalog, no prompts,
+    // no network — for CI/scripted use.
+    const skipOnboard = rest.includes("--all") || rest.includes("--offline");
+    const scriptArgs = rest.filter((a) => a !== "--all" && a !== "--offline");
+    run(skipOnboard ? "scripts/init.mjs" : "scripts/onboard.mjs", scriptArgs);
     break;
+  }
 
   case "check":
     // Report stale skills (by last_reviewed) and pending growth-loop items.
@@ -41,7 +46,8 @@ switch (cmd) {
 
   validate [path...]   Validate SKILL.md files (default: all in skills/)
   bridge [--detect]    Write pointer files for non-AGENTS.md agents
-  init                 Scaffold Sieve into the current project (Stage 2)
+  init [--all|--offline]  Onboard into the current project: interview + registry-recommended
+                       skills (default), or --all/--offline for the full bundled catalog
   check [--days N]     Report stale skills and pending growth-loop items
 `);
     process.exit(0);

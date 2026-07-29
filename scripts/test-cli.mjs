@@ -42,10 +42,14 @@ import("node:fs").then(({ writeFileSync }) => {
   check("validate exits nonzero on malformed skill", rb.status !== 0);
   rmSync(badDir, { recursive: true, force: true });
 
-  // 3. init scaffolds a fresh directory
+  // 3. init --all scaffolds a fresh directory with the full catalog, no prompts,
+  // no network — this is the deterministic path the self-test can run in CI.
+  // Bare `init` (no --all) runs the interactive onboarding interview instead;
+  // that path is exercised manually / in onboard.mjs's own fallback logic,
+  // not here, since it needs a TTY and a live (or deliberately down) registry.
   const proj = mkdtempSync(join(tmpdir(), "sieve-init-"));
-  const ri = run(["init", proj, "--detect"]);
-  check("init exits 0", ri.status === 0);
+  const ri = run(["init", proj, "--all", "--detect"]);
+  check("init --all exits 0", ri.status === 0);
   check("init writes AGENTS.md", existsSync(join(proj, "AGENTS.md")));
   check("init writes skills/", existsSync(join(proj, "skills")));
   check("init seeds PROGRESS.md", existsSync(join(proj, "PROGRESS.md")));
