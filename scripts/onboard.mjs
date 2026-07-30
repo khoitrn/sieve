@@ -24,6 +24,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { createInterface } from "node:readline/promises";
 import { copyAsset, seedProjectFiles, writeBridgeFiles } from "./lib/scaffold.mjs";
+import { fetchRegistry, indexEntryFor, saveProjectState, writeLocalIndex } from "./lib/registry.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkgRoot = dirname(__dirname);
@@ -32,9 +33,6 @@ const force = args.includes("--force");
 const detect = args.includes("--detect");
 const detectStack = args.includes("--detect-stack");
 const target = args.find((a) => !a.startsWith("--")) || process.cwd();
-
-const REGISTRY_URL = process.env.SIEVE_REGISTRY_URL ?? "https://sieve-registry.khoitrn.workers.dev";
-const REQUEST_TIMEOUT_MS = 5000;
 
 // Small, explicit static table — a dependency name (or prefix) maps to a tag
 // fed into recommend()'s existing tag-matching. Deliberately short: this is
@@ -112,15 +110,18 @@ async function runInterview() {
   }
 }
 
-async function fetchRegistry(path, init) {
-  const res = await fetch(`${REGISTRY_URL}${path}`, { ...init, signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
-  if (!res.ok) throw new Error(`${path} -> ${res.status}`);
-  return res.json();
-}
-
 function fallbackToFullCatalog(reason) {
   console.log(`\nRegistry unavailable (${reason}) — falling back to the full bundled catalog.\n`);
   copyAsset(pkgRoot, target, "skills", force);
+  copyAsset(pkgRoot, target, "sieve.index.json", force);
+  mkdirSync(join(target, ".sieve"), { recursive: true });
+  writeFileSync(
+    join(target, ".sieve", "OFFLINE_FALLBACK.md"),
+    `# Installed offline\n\nThe Sieve registry was unreachable during \`sieve init\` (${reason}), so the full` +
+      ` bundled skill catalog was installed instead of a tailored shortlist.\n\nRun \`sieve init --force\` once` +
+      ` the registry is reachable to replace this with the recommended shortlist instead.\n`,
+  );
+  console.log("write .sieve/OFFLINE_FALLBACK.md");
   return { source: "offline-fallback", assignedSkills: [] };
 }
 
@@ -141,6 +142,7 @@ async function pullFromRegistry(answers) {
   const wanted = new Set([...choice.guardrails, ...choice.recommended, ...(choice.bundle?.skill_names ?? [])]);
   const bySkillName = new Map(skills.map((s) => [s.name, s]));
   const installed = [];
+  const indexEntries = [];
 
   for (const name of wanted) {
     const skill = bySkillName.get(name);
@@ -155,8 +157,12 @@ async function pullFromRegistry(answers) {
       console.log(`pull  ${skillDir}`);
     }
     installed.push({ name: skill.name, version: skill.version, sourceId: skill.source_id });
+    indexEntries.push(indexEntryFor(skill));
   }
 
+  const bundled = JSON.parse(readFileSync(join(pkgRoot, "sieve.index.json"), "utf8"));
+  writeLocalIndex(target, { $schema: bundled.$schema, name: bundled.name, version: bundled.version }, indexEntries);
+  console.log("write sieve.index.json");
   return { source: "registry", assignedSkills: installed };
 }
 
@@ -181,7 +187,6 @@ mkdirSync(target, { recursive: true });
 
 console.log(`Onboarding Sieve into ${target}\n`);
 copyAsset(pkgRoot, target, "AGENTS.md", force);
-copyAsset(pkgRoot, target, "sieve.index.json", force);
 copyAsset(pkgRoot, target, "templates", force);
 seedProjectFiles(pkgRoot, target, force);
 
@@ -209,11 +214,7 @@ if (result.source === "registry") {
   await recordAssignment(projectId, repo, result.assignedSkills);
 }
 
-mkdirSync(join(target, ".sieve"), { recursive: true });
-writeFileSync(
-  join(target, ".sieve", "project.json"),
-  JSON.stringify({ projectId, source: result.source, assignedSkills: result.assignedSkills, updatedAt: new Date().toISOString() }, null, 2) + "\n",
-);
+saveProjectState(target, { projectId, source: result.source, assignedSkills: result.assignedSkills });
 console.log("write .sieve/project.json");
 
 writeBridgeFiles(pkgRoot, target, detect);

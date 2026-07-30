@@ -39,6 +39,21 @@ switch (cmd) {
     run("scripts/check.mjs", rest);
     break;
 
+  case "list":
+    // Show what's actually installed, per the local sieve.index.json.
+    run("scripts/list.mjs", rest);
+    break;
+
+  case "add":
+    // Pull one more skill from the registry into an already-onboarded project.
+    run("scripts/add.mjs", rest);
+    break;
+
+  case "remove":
+    // Drop one installed skill. Guardrails need --force.
+    run("scripts/remove.mjs", rest);
+    break;
+
   case "-h":
   case "--help":
   case undefined:
@@ -52,6 +67,9 @@ switch (cmd) {
                        to the interview's focus answer
   check [--days N] [--updates]  Report stale skills and pending growth-loop items;
                        --updates also diffs installed skill versions against the registry
+  list                 Show skills currently installed (guardrails vs catalog)
+  add <name> [--force]     Pull one more skill from the registry into this project
+  remove <name> [--force]  Drop one installed skill (--force required for guardrails)
 `);
     process.exit(0);
     break;

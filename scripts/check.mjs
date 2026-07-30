@@ -43,6 +43,16 @@ function countPending(file) {
     .filter((l) => l.trim().startsWith("- ") && !l.includes("<date>")).length;
 }
 
+function loadProjectSource() {
+  const stateFile = join(".sieve", "project.json");
+  if (!existsSync(stateFile)) return null;
+  try {
+    return JSON.parse(readFileSync(stateFile, "utf8")).source ?? null;
+  } catch {
+    return null;
+  }
+}
+
 const index = loadIndex();
 const stale = [];
 const missing = [];
@@ -58,6 +68,12 @@ for (const s of index.skills) {
 }
 
 console.log(`Catalog check (staleness window: ${WINDOW_DAYS} days)\n`);
+
+if (loadProjectSource() === "offline-fallback") {
+  console.log(
+    "Installed offline: full bundled catalog, not a tailored set. Run 'sieve init --force' when the registry is reachable to get the shortlist instead.\n",
+  );
+}
 
 console.log(`Skills: ${index.skills.length} total`);
 if (stale.length === 0) {
