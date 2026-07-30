@@ -20,6 +20,7 @@
     --line: rgba(30, 33, 25, 0.13);
     --line-strong: rgba(30, 33, 25, 0.22);
     --good: #5e7f4e;
+    --critical: #ab5138;
     --cat-planning: #8177ad;
     --cat-testing: #4b8577;
     --info: #4f6f8c;
@@ -42,6 +43,7 @@
       --line: rgba(237, 235, 223, 0.13);
       --line-strong: rgba(237, 235, 223, 0.24);
       --good: #8aae76;
+      --critical: #d48068;
       --cat-planning: #a79dd1;
       --cat-testing: #7ebba9;
       --info: #86aac4;
@@ -64,14 +66,13 @@
   }
   a { color: inherit; }
   img { max-width: 100%; }
-
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  code.mono { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; font-size: 0.92em; }
 
   header.topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 880px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 22px 24px;
   }
@@ -81,14 +82,18 @@
   nav.top-links a { color: var(--ink-dim); text-decoration: none; }
   nav.top-links a:hover { color: var(--ink); }
 
-  section.hero { max-width: 880px; margin: 0 auto; padding: 40px 24px 8px; }
-  .hero h1 { font-size: 40px; line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.01em; }
+  section { max-width: 900px; margin: 0 auto; padding: 8px 24px 56px; }
+  section.hero { padding-top: 44px; padding-bottom: 8px; }
+  h2.section-title { font-size: 22px; margin: 0 0 6px; }
+  p.section-sub { color: var(--ink-dim); font-size: 14px; margin: 0 0 22px; max-width: 580px; line-height: 1.55; }
+
+  .hero h1 { font-size: 42px; line-height: 1.13; margin: 0 0 16px; letter-spacing: -0.01em; }
   .hero p.lede { font-size: 17px; color: var(--ink-dim); max-width: 620px; margin: 0 0 30px; line-height: 1.55; }
 
   .term {
     background: var(--surface-raised);
     border: 1px solid var(--line-strong);
-    border-radius: 8px;
+    border-radius: 9px;
     box-shadow: var(--shadow);
     overflow: hidden;
     margin: 0 0 12px;
@@ -96,13 +101,17 @@
   .term-bar {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 9px 12px;
+    gap: 7px;
+    padding: 10px 13px;
     border-bottom: 1px solid var(--line);
+    background: var(--surface);
   }
-  .term-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line-strong); }
+  .term-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .term-dot.r { background: #e0645a; }
+  .term-dot.y { background: #e3b341; }
+  .term-dot.g { background: #61c454; }
   .term-title { margin-left: 8px; font-size: 11px; color: var(--ink-faint-text); text-transform: uppercase; letter-spacing: 0.06em; }
-  .term-body { padding: 16px 18px; font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
+  .term-body { padding: 17px 19px; font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
   .term-prompt { color: var(--accent); }
   .term-out { color: var(--ink-dim); }
   .term-copy {
@@ -119,29 +128,19 @@
     font-family: inherit;
   }
   .term-copy:hover { border-color: var(--accent); color: var(--accent-ink); }
-  .hero-note { font-size: 13px; color: var(--ink-faint-text); margin: 0 0 34px; }
+  .hero-note { font-size: 13px; color: var(--ink-faint-text); margin: 0 0 8px; }
 
-  section.demo { max-width: 880px; margin: 0 auto; padding: 8px 24px 48px; }
-  .demo h2 { font-size: 22px; margin: 0 0 6px; }
-  .demo p.sub { color: var(--ink-dim); font-size: 14px; margin: 0 0 20px; max-width: 560px; line-height: 1.55; }
   .shot {
     border: 1px solid var(--line-strong);
-    border-radius: 8px;
+    border-radius: 9px;
     box-shadow: var(--shadow);
     overflow: hidden;
     background: var(--surface);
   }
   .shot img { display: block; width: 100%; }
-  .demo-cta { margin-top: 14px; font-size: 13px; color: var(--ink-faint-text); }
-  .demo-cta a { color: var(--accent-ink); text-decoration: underline; }
+  .shot-caption { margin-top: 10px; font-size: 13px; color: var(--ink-faint-text); }
 
-  section.features { max-width: 880px; margin: 0 auto; padding: 8px 24px 56px; }
-  .features h2 { font-size: 22px; margin: 0 0 24px; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .card {
     background: var(--surface);
     border: 1px solid var(--line);
@@ -152,8 +151,31 @@
   .card h3 { font-size: 15px; margin: 0 0 8px; display: flex; align-items: center; }
   .card p { font-size: 13.5px; color: var(--ink-dim); line-height: 1.55; margin: 0; }
 
+  table.compare { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  table.compare th, table.compare td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+  table.compare th { color: var(--ink-faint-text); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: var(--surface-raised); }
+  table.compare tr:last-child td { border-bottom: none; }
+  table.compare td.yes { color: var(--good); }
+  table.compare td.no { color: var(--ink-faint-text); }
+  table.compare th:first-child, table.compare td:first-child { color: var(--ink); font-weight: 600; }
+
+  .pill-grid { display: flex; flex-wrap: wrap; gap: 9px; }
+  .pill {
+    font-size: 13px;
+    padding: 7px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 20px;
+    background: var(--surface);
+    color: var(--ink-dim);
+  }
+
+  section.cta { text-align: center; padding: 20px 24px 60px; }
+  section.cta h2 { font-size: 24px; margin: 0 0 10px; }
+  section.cta p { color: var(--ink-dim); font-size: 14px; margin: 0 0 22px; }
+  .cta-term { max-width: 460px; margin: 0 auto; text-align: left; }
+
   footer {
-    max-width: 880px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 28px 24px 48px;
     border-top: 1px solid var(--line);
@@ -170,6 +192,8 @@
   @media (max-width: 640px) {
     .hero h1 { font-size: 30px; }
     .grid { grid-template-columns: 1fr; }
+    table.compare { font-size: 12px; }
+    table.compare th, table.compare td { padding: 10px; }
     header.topbar, footer { flex-direction: column; gap: 12px; align-items: flex-start; }
   }
 </style>
@@ -188,8 +212,8 @@
   </div>
   <nav class="top-links">
     <a href="https://github.com/khoitrn/sieve" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/khoitrn/sieve#readme" target="_blank" rel="noopener">Docs</a>
     <a href="https://www.npmjs.com/package/sievekit" target="_blank" rel="noopener">npm</a>
-    <a href="https://sieve.khoitrn.com" target="_blank" rel="noopener">Dashboard</a>
   </nav>
 </header>
 
@@ -198,12 +222,12 @@
   <p class="lede">
     Sieve is a portable, file-based agent protocol and skill library. Install it in one
     command and it works the same across Claude Code, Codex, Cursor, and 20+ other agents —
-    the durable layer stays in plain files you own, not locked into any one vendor.
+    the durable layer stays in plain files you own, not locked into any one vendor's memory.
   </p>
 
   <div class="term">
     <div class="term-bar">
-      <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+      <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
       <span class="term-title">terminal</span>
       <span style="flex:1"></span>
       <button class="term-copy" onclick="navigator.clipboard.writeText('npx sievekit init')">copy</button>
@@ -235,24 +259,20 @@ Sieve is ready. Open your coding agent and describe what you want to build.</spa
 </section>
 
 <section class="demo">
-  <h2>See it, don't guess</h2>
-  <p class="sub">
+  <h2 class="section-title">See it, don't guess</h2>
+  <p class="section-sub">
     Catalog health, activity, and skill usage — read straight from your repo's own
     <code class="mono">sieve.index.json</code> and <code class="mono">HISTORY.jsonl</code>.
-    No account, no server, no telemetry.
+    A dashboard view ships as part of the toolkit (self-hostable, no account, no telemetry) —
+    this is it, running against a real catalog.
   </p>
   <div class="shot">
     <img src="assets/dashboard.png" alt="Sieve dashboard showing skill count, catalog health, guardrails intact, recent activity, and skill usage" />
   </div>
-  <p class="demo-cta">
-    Already ran <code class="mono">init</code>? Push it, then open
-    <a href="https://sieve.khoitrn.com" target="_blank" rel="noopener">sieve.khoitrn.com</a>
-    and point it at <code class="mono">owner/repo</code> — works for any public repo, no sign-in required.
-  </p>
 
   <div class="term" style="margin-top:28px">
     <div class="term-bar">
-      <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+      <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
       <span class="term-title">terminal</span>
     </div>
     <div class="term-body mono"><span class="term-prompt">$</span> sieve check
@@ -268,11 +288,77 @@ Growth loop inputs:
 
 Catalog is healthy. Nothing to triage.</span></div>
   </div>
-  <p class="demo-cta">A report, never a mutation — run it on a cadence and triage what it flags yourself.</p>
+  <p class="shot-caption">A report, never a mutation — run it on a cadence and triage what it flags yourself.</p>
+</section>
+
+<section class="compare">
+  <h2 class="section-title">Why not just paste rules into every tool?</h2>
+  <p class="section-sub">
+    The alternative to a protocol is doing this by hand, per agent, forever — or trusting
+    each vendor's native memory feature and re-learning it every time you switch tools.
+  </p>
+  <table class="compare">
+    <tr>
+      <th></th>
+      <th>Sieve</th>
+      <th>Hand-copied rules</th>
+      <th>Vendor-native memory</th>
+    </tr>
+    <tr>
+      <td>Works the same across agents</td>
+      <td class="yes">yes — one AGENTS.md</td>
+      <td class="no">copy/paste per tool</td>
+      <td class="no">locked to one vendor</td>
+    </tr>
+    <tr>
+      <td>Plain files you own</td>
+      <td class="yes">yes</td>
+      <td class="yes">yes</td>
+      <td class="no">vendor-held state</td>
+    </tr>
+    <tr>
+      <td>Skills fit the project, not everything loaded</td>
+      <td class="yes">registry-recommended shortlist</td>
+      <td class="no">all-or-nothing, by hand</td>
+      <td class="no">no concept of scoped skills</td>
+    </tr>
+    <tr>
+      <td>Catalog health you can check</td>
+      <td class="yes"><code class="mono">sieve check</code></td>
+      <td class="no">nobody's tracking it</td>
+      <td class="no">opaque</td>
+    </tr>
+    <tr>
+      <td>Portable if you switch agents</td>
+      <td class="yes">yes, by design</td>
+      <td class="no">start over</td>
+      <td class="no">start over</td>
+    </tr>
+  </table>
+</section>
+
+<section class="integrations">
+  <h2 class="section-title">Reads natively, or bridges in one line</h2>
+  <p class="section-sub">
+    <code class="mono">AGENTS.md</code> is read natively by most of these. For the rest,
+    <code class="mono">sieve bridge</code> writes a thin pointer file back to it — never a
+    second copy of the rules.
+  </p>
+  <div class="pill-grid">
+    <span class="pill">Claude Code</span>
+    <span class="pill">Codex</span>
+    <span class="pill">Cursor</span>
+    <span class="pill">GitHub Copilot</span>
+    <span class="pill">Gemini CLI</span>
+    <span class="pill">Aider</span>
+    <span class="pill">Windsurf</span>
+    <span class="pill">Zed</span>
+    <span class="pill">+ 20 more</span>
+  </div>
 </section>
 
 <section class="features">
-  <h2>How it stays honest</h2>
+  <h2 class="section-title">How it stays honest</h2>
   <div class="grid">
     <div class="card">
       <h3><span class="dot" style="background:var(--cat-planning)"></span>One command, tailored skills</h3>
@@ -282,8 +368,7 @@ Catalog is healthy. Nothing to triage.</span></div>
     <div class="card">
       <h3><span class="dot" style="background:var(--info)"></span>One protocol, every agent</h3>
       <p><code class="mono">AGENTS.md</code> is the single source of truth. <code class="mono">sieve bridge</code>
-         writes thin pointer files for Claude Code, Cursor, Copilot, Gemini CLI, and Windsurf —
-         you never maintain the same rules twice.</p>
+         writes thin pointer files for the rest — you never maintain the same rules twice.</p>
     </div>
     <div class="card">
       <h3><span class="dot" style="background:var(--cat-verification)"></span>Six-pillar catalog</h3>
@@ -295,6 +380,20 @@ Catalog is healthy. Nothing to triage.</span></div>
       <p>Skills are proposed, validated, and promoted as real work surfaces them.
          <code class="mono">sieve check</code> keeps the catalog honest over time.</p>
     </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Start in one command</h2>
+  <p>No account, no server round-trip required, no lock-in.</p>
+  <div class="term cta-term">
+    <div class="term-bar">
+      <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+      <span class="term-title">terminal</span>
+      <span style="flex:1"></span>
+      <button class="term-copy" onclick="navigator.clipboard.writeText('npx sievekit init')">copy</button>
+    </div>
+    <div class="term-body mono"><span class="term-prompt">$</span> npx sievekit init</div>
   </div>
 </section>
 
