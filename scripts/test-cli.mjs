@@ -67,6 +67,14 @@ import("node:fs").then(({ writeFileSync }) => {
   // and a full (non-detect) bridge run writes CLAUDE.md
   const rbridge = run(["bridge"], { cwd: proj });
   check("bridge writes CLAUDE.md on full run", existsSync(join(proj, "CLAUDE.md")));
+
+  // 5b. list reads the scaffolded project's own sieve.index.json — no
+  // network involved, so (unlike add/remove) this is safe to run in CI.
+  const rlist = run(["list", proj]);
+  check("list exits 0 on a scaffolded project", rlist.status === 0);
+  check("list reports guardrails", /Guardrails \(always on\)/.test(rlist.stdout));
+  check("list reports the catalog", /Catalog:/.test(rlist.stdout));
+
   rmSync(proj, { recursive: true, force: true });
 
   // 6. check runs against the shipped catalog and exits 0

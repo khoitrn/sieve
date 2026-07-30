@@ -23,7 +23,10 @@ export function indexEntryFor(skill) {
     name: skill.name,
     type: "skill-md",
     description: skill.description,
-    url: join("skills", skill.category, skill.name, "SKILL.md"),
+    // Forward slashes always — this is a portable manifest field, not a
+    // filesystem path, so it must not pick up path.join's OS-specific
+    // separator (join would emit backslashes on Windows).
+    url: `skills/${skill.category}/${skill.name}/SKILL.md`,
     category: skill.category,
     tier: skill.tier,
     tags: skill.tags,
