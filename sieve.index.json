@@ -52,6 +52,18 @@
       "status": "active"
     },
     {
+      "name": "open-code-review",
+      "type": "skill-md",
+      "description": "Run a second, independent automated review pass with the open-code-review CLI when it's installed, alongside the requesting-code-review guardrail.",
+      "url": "skills/review/open-code-review/SKILL.md",
+      "category": "review",
+      "tier": "catalog",
+      "tags": ["review", "quality", "optional-tooling"],
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-29",
+      "status": "active"
+    },
+    {
       "name": "systematic-debugging",
       "type": "skill-md",
       "description": "Find the root cause of a bug through a disciplined four-phase process instead of guessing.",

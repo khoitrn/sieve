@@ -70,13 +70,31 @@ The catalog grows by use. When work reveals a gap, capture it instead of letting
 - Run `sieve check` on a cadence to surface stale skills (by `last_reviewed`) and pending items. Triage is a human step: revise, promote, or archive.
 - Periodically load `skill-stocktake` for the judgment pass `sieve check` cannot do on its own: overlap, currency, and usage, each skill given a verdict with a reason.
 
+## Pillars
+
+The catalog is organized into six categories. New skills should fit one of
+these; if none fits, that itself is a signal to capture in `PROPOSED.md`
+rather than force a fit.
+
+- **planning** — shape a rough idea or unfamiliar project into an agreed
+  plan before code gets written.
+- **testing** — enforce a test-first discipline on implementation work.
+- **review** — check completed work against the plan before moving on.
+- **debugging** — find root causes methodically instead of guessing.
+- **verification** — confirm work with evidence before calling it done.
+- **maintenance** — keep the catalog itself healthy over time.
+
+Hand-authored personal skills and whatever a connected source's own
+directory structure produces are not required to fit these six — they are
+intentionally free-form, outside the curated taxonomy.
+
 ## Local skills
 
 Skills live in `skills/<category>/<name>/SKILL.md`. Reference them, do not paste their contents here.
 
 - planning: `grill-me`, `acknowledge-project`, `writing-plans`
 - testing: `test-driven-development`
-- review: `requesting-code-review`
+- review: `requesting-code-review`, `open-code-review`
 - debugging: `systematic-debugging`
 - verification: `verification-before-completion`
 - maintenance: `skill-stocktake`

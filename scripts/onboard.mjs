@@ -6,8 +6,12 @@
 // back to the full bundled-catalog copy from init.mjs — Sieve must keep
 // working as a plain, portable, file-based layer even with no network.
 //
-// Usage: node scripts/onboard.mjs [target-dir] [--force] [--detect]
+// Usage: node scripts/onboard.mjs [target-dir] [--force] [--detect] [--detect-stack]
 //        (target-dir defaults to the current directory)
+//        --detect-stack reads package.json in target-dir and adds a small set
+//        of stack tags (e.g. "nextjs", "cloudflare") to the interview's focus
+//        answer, purely as extra recommend() input — a static lookup table,
+//        no ML/LLM, same reasoning as recommend.ts's own tag matching.
 //
 // Registry URL: SIEVE_REGISTRY_URL env var, defaults to the maintained
 // instance. Self-hosting your own registry is a first-class option, not an
@@ -26,10 +30,43 @@ const pkgRoot = dirname(__dirname);
 const args = process.argv.slice(2);
 const force = args.includes("--force");
 const detect = args.includes("--detect");
+const detectStack = args.includes("--detect-stack");
 const target = args.find((a) => !a.startsWith("--")) || process.cwd();
 
 const REGISTRY_URL = process.env.SIEVE_REGISTRY_URL ?? "https://sieve-registry.khoitrn.workers.dev";
 const REQUEST_TIMEOUT_MS = 5000;
+
+// Small, explicit static table — a dependency name (or prefix) maps to a tag
+// fed into recommend()'s existing tag-matching. Deliberately short: this is
+// signal for future stack-specific bundles, not an attempt at exhaustive
+// framework detection.
+const STACK_TAG_MAP = [
+  [/^next$/, "nextjs"],
+  [/^wrangler$/, "cloudflare"],
+  [/^@cloudflare\//, "cloudflare"],
+  [/^react(-dom)?$/, "react"],
+  [/^vue$/, "vue"],
+  [/^svelte$/, "svelte"],
+];
+
+function detectStackTags(dir) {
+  const pkgPath = join(dir, "package.json");
+  if (!existsSync(pkgPath)) return [];
+  let pkg;
+  try {
+    pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+  } catch {
+    return [];
+  }
+  const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+  const tags = new Set();
+  for (const dep of Object.keys(deps)) {
+    for (const [pattern, tag] of STACK_TAG_MAP) {
+      if (pattern.test(dep)) tags.add(tag);
+    }
+  }
+  return [...tags];
+}
 
 function gitRemote(dir) {
   const r = spawnSync("git", ["-C", dir, "remote", "get-url", "origin"], { encoding: "utf8" });
@@ -97,7 +134,11 @@ async function pullFromRegistry(answers) {
     }),
   ]);
 
-  const wanted = new Set([...choice.guardrails, ...choice.recommended]);
+  if (choice.bundle) {
+    console.log(`bundle  matched "${choice.bundle.name}" — ${choice.bundle.description}`);
+  }
+
+  const wanted = new Set([...choice.guardrails, ...choice.recommended, ...(choice.bundle?.skill_names ?? [])]);
   const bySkillName = new Map(skills.map((s) => [s.name, s]));
   const installed = [];
 
@@ -113,7 +154,7 @@ async function pullFromRegistry(answers) {
       writeFileSync(join(dst, "SKILL.md"), skill.body);
       console.log(`pull  ${skillDir}`);
     }
-    installed.push({ name: skill.name, version: skill.version });
+    installed.push({ name: skill.name, version: skill.version, sourceId: skill.source_id });
   }
 
   return { source: "registry", assignedSkills: installed };
@@ -145,6 +186,14 @@ copyAsset(pkgRoot, target, "templates", force);
 seedProjectFiles(pkgRoot, target, force);
 
 const answers = await runInterview();
+
+if (detectStack) {
+  const stackTags = detectStackTags(target);
+  if (stackTags.length) {
+    console.log(`detect  stack signals: ${stackTags.join(", ")}`);
+    answers.focus = [...new Set([...answers.focus, ...stackTags])];
+  }
+}
 
 let result;
 try {

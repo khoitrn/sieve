@@ -47,7 +47,7 @@ Guardrails (test-driven development, code review, verification) stay active by d
 - `skills/<category>/<name>/SKILL.md`: the catalog.
   - planning: `grill-me`, `acknowledge-project`, `writing-plans`
   - testing: `test-driven-development`
-  - review: `requesting-code-review`
+  - review: `requesting-code-review`, `open-code-review`
   - debugging: `systematic-debugging`
   - verification: `verification-before-completion`
   - maintenance: `skill-stocktake`

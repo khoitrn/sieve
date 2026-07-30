@@ -46,9 +46,12 @@ switch (cmd) {
 
   validate [path...]   Validate SKILL.md files (default: all in skills/)
   bridge [--detect]    Write pointer files for non-AGENTS.md agents
-  init [--all|--offline]  Onboard into the current project: interview + registry-recommended
-                       skills (default), or --all/--offline for the full bundled catalog
-  check [--days N]     Report stale skills and pending growth-loop items
+  init [--all|--offline] [--detect-stack]  Onboard into the current project: interview +
+                       registry-recommended skills (default), or --all/--offline for the
+                       full bundled catalog; --detect-stack adds package.json-based tags
+                       to the interview's focus answer
+  check [--days N] [--updates]  Report stale skills and pending growth-loop items;
+                       --updates also diffs installed skill versions against the registry
 `);
     process.exit(0);
     break;
