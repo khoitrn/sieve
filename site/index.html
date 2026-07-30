@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sieve — one protocol, every coding agent</title>
+<meta name="description" content="A portable, file-based agent protocol and skill library. Install it in one command, works the same across Claude Code, Codex, Cursor, and 20+ other coding agents." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='1.5' y='1.5' width='21' height='21' rx='5' fill='%23bd7a2c'/%3E%3Cpath d='M15.8 8.0 C15.6 6.2 10.8 6.8 12 12 C13.2 17.2 8.4 17.8 8.2 16.0' fill='none' stroke='%23fafaf4' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #e4e6de;
+    --surface: #f3f4ec;
+    --surface-raised: #fafaf4;
+    --ink: #1e2119;
+    --ink-dim: #5b6058;
+    --ink-faint-text: #63685f;
+    --accent: #bd7a2c;
+    --accent-ink: #6b4413;
+    --line: rgba(30, 33, 25, 0.13);
+    --line-strong: rgba(30, 33, 25, 0.22);
+    --good: #5e7f4e;
+    --cat-planning: #8177ad;
+    --cat-testing: #4b8577;
+    --info: #4f6f8c;
+    --cat-debugging: #a15c3e;
+    --cat-verification: #75873f;
+    --cat-maintenance: #9c5f74;
+    --shadow: 0 1px 2px rgba(30, 33, 25, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --bg: #15160f;
+      --surface: #1d1e15;
+      --surface-raised: #232419;
+      --ink: #edebdf;
+      --ink-dim: #a2a497;
+      --ink-faint-text: #7d8172;
+      --accent: #e3a24f;
+      --accent-ink: #f5d9ac;
+      --line: rgba(237, 235, 223, 0.13);
+      --line-strong: rgba(237, 235, 223, 0.24);
+      --good: #8aae76;
+      --cat-planning: #a79dd1;
+      --cat-testing: #7ebba9;
+      --info: #86aac4;
+      --cat-debugging: #cb8b6c;
+      --cat-verification: #a3b56c;
+      --cat-maintenance: #cf93a9;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", "SF Pro Text", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+  }
+  a { color: inherit; }
+  img { max-width: 100%; }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+  header.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 22px 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 17px; letter-spacing: 0.02em; }
+  .brand-tag { color: var(--ink-faint-text); font-size: 12px; font-weight: 400; margin-left: 8px; }
+  nav.top-links { display: flex; gap: 20px; font-size: 13px; }
+  nav.top-links a { color: var(--ink-dim); text-decoration: none; }
+  nav.top-links a:hover { color: var(--ink); }
+
+  section.hero { max-width: 880px; margin: 0 auto; padding: 40px 24px 8px; }
+  .hero h1 { font-size: 40px; line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.01em; }
+  .hero p.lede { font-size: 17px; color: var(--ink-dim); max-width: 620px; margin: 0 0 30px; line-height: 1.55; }
+
+  .term {
+    background: var(--surface-raised);
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin: 0 0 12px;
+  }
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .term-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line-strong); }
+  .term-title { margin-left: 8px; font-size: 11px; color: var(--ink-faint-text); text-transform: uppercase; letter-spacing: 0.06em; }
+  .term-body { padding: 16px 18px; font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
+  .term-prompt { color: var(--accent); }
+  .term-out { color: var(--ink-dim); }
+  .term-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--ink-faint-text);
+    background: none;
+    border: 1px solid var(--line-strong);
+    border-radius: 20px;
+    padding: 4px 11px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .term-copy:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .hero-note { font-size: 13px; color: var(--ink-faint-text); margin: 0 0 34px; }
+
+  section.demo { max-width: 880px; margin: 0 auto; padding: 8px 24px 48px; }
+  .demo h2 { font-size: 22px; margin: 0 0 6px; }
+  .demo p.sub { color: var(--ink-dim); font-size: 14px; margin: 0 0 20px; max-width: 560px; line-height: 1.55; }
+  .shot {
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .shot img { display: block; width: 100%; }
+  .demo-cta { margin-top: 14px; font-size: 13px; color: var(--ink-faint-text); }
+  .demo-cta a { color: var(--accent-ink); text-decoration: underline; }
+
+  section.features { max-width: 880px; margin: 0 auto; padding: 8px 24px 56px; }
+  .features h2 { font-size: 22px; margin: 0 0 24px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .card .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+  .card h3 { font-size: 15px; margin: 0 0 8px; display: flex; align-items: center; }
+  .card p { font-size: 13.5px; color: var(--ink-dim); line-height: 1.55; margin: 0; }
+
+  footer {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 28px 24px 48px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--ink-faint-text);
+  }
+  footer nav { display: flex; gap: 18px; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 30px; }
+    .grid { grid-template-columns: 1fr; }
+    header.topbar, footer { flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="1.5" y="1.5" width="21" height="21" rx="5" fill="var(--accent)" />
+      <path d="M15.8 8.0 C15.6 6.2 10.8 6.8 12 12 C13.2 17.2 8.4 17.8 8.2 16.0"
+            fill="none" stroke="var(--surface-raised)" stroke-width="2.8" stroke-linecap="round" />
+    </svg>
+    SIEVE
+    <span class="brand-tag">agent protocol &amp; skill library</span>
+  </div>
+  <nav class="top-links">
+    <a href="https://github.com/khoitrn/sieve" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.npmjs.com/package/sievekit" target="_blank" rel="noopener">npm</a>
+    <a href="https://sieve.khoitrn.com" target="_blank" rel="noopener">Dashboard</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>One protocol.<br />Every coding agent.</h1>
+  <p class="lede">
+    Sieve is a portable, file-based agent protocol and skill library. Install it in one
+    command and it works the same across Claude Code, Codex, Cursor, and 20+ other agents —
+    the durable layer stays in plain files you own, not locked into any one vendor.
+  </p>
+
+  <div class="term">
+    <div class="term-bar">
+      <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+      <span class="term-title">terminal</span>
+      <span style="flex:1"></span>
+      <button class="term-copy" onclick="navigator.clipboard.writeText('npx sievekit init')">copy</button>
+    </div>
+    <div class="term-body mono"><span class="term-prompt">$</span> npx sievekit init
+<span class="term-out">
+copy  AGENTS.md
+copy  sieve.index.json
+copy  templates
+seed  PROGRESS.md
+seed  HISTORY.jsonl
+seed  PROPOSED.md
+seed  STALE.md
+seed  staging/README.md
+
+A couple of questions to pick the right skills — press Enter to skip any of them.
+
+write CLAUDE.md  (Claude Code)
+write .cursor/rules/sieve.mdc  (Cursor)
+write .github/copilot-instructions.md  (GitHub Copilot)
+...
+
+Sieve is ready. Open your coding agent and describe what you want to build.</span></div>
+  </div>
+  <p class="hero-note">
+    Two short questions, then it pulls only the skills that fit from the registry — not the
+    whole catalog. No registry reachable? It falls back to the full bundled set automatically.
+  </p>
+</section>
+
+<section class="demo">
+  <h2>See it, don't guess</h2>
+  <p class="sub">
+    Catalog health, activity, and skill usage — read straight from your repo's own
+    <code class="mono">sieve.index.json</code> and <code class="mono">HISTORY.jsonl</code>.
+    No account, no server, no telemetry.
+  </p>
+  <div class="shot">
+    <img src="assets/dashboard.png" alt="Sieve dashboard showing skill count, catalog health, guardrails intact, recent activity, and skill usage" />
+  </div>
+  <p class="demo-cta">
+    Already ran <code class="mono">init</code>? Push it, then open
+    <a href="https://sieve.khoitrn.com" target="_blank" rel="noopener">sieve.khoitrn.com</a>
+    and point it at <code class="mono">owner/repo</code> — works for any public repo, no sign-in required.
+  </p>
+
+  <div class="term" style="margin-top:28px">
+    <div class="term-bar">
+      <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+      <span class="term-title">terminal</span>
+    </div>
+    <div class="term-body mono"><span class="term-prompt">$</span> sieve check
+<span class="term-out">
+Catalog check (staleness window: 90 days)
+
+Skills: 9 total
+  none past the staleness window.
+
+Growth loop inputs:
+  PROPOSED.md: 0 pending proposal(s)
+  STALE.md:    0 pending flag(s)
+
+Catalog is healthy. Nothing to triage.</span></div>
+  </div>
+  <p class="demo-cta">A report, never a mutation — run it on a cadence and triage what it flags yourself.</p>
+</section>
+
+<section class="features">
+  <h2>How it stays honest</h2>
+  <div class="grid">
+    <div class="card">
+      <h3><span class="dot" style="background:var(--cat-planning)"></span>One command, tailored skills</h3>
+      <p>Two short questions — new idea or existing project, any focus areas — then only the
+         skills that fit get installed, plus the always-on guardrails. Not the whole catalog.</p>
+    </div>
+    <div class="card">
+      <h3><span class="dot" style="background:var(--info)"></span>One protocol, every agent</h3>
+      <p><code class="mono">AGENTS.md</code> is the single source of truth. <code class="mono">sieve bridge</code>
+         writes thin pointer files for Claude Code, Cursor, Copilot, Gemini CLI, and Windsurf —
+         you never maintain the same rules twice.</p>
+    </div>
+    <div class="card">
+      <h3><span class="dot" style="background:var(--cat-verification)"></span>Six-pillar catalog</h3>
+      <p>Planning, testing, review, debugging, verification, maintenance — every skill has a
+         clear job, so the catalog stays legible as it grows.</p>
+    </div>
+    <div class="card">
+      <h3><span class="dot" style="background:var(--cat-maintenance)"></span>Grows by use, not by design</h3>
+      <p>Skills are proposed, validated, and promoted as real work surfaces them.
+         <code class="mono">sieve check</code> keeps the catalog honest over time.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>MIT licensed &middot; a plain, file-based layer you own.</span>
+  <nav>
+    <a href="https://github.com/khoitrn/sieve" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/khoitrn/sieve#readme" target="_blank" rel="noopener">Docs</a>
+    <a href="https://www.npmjs.com/package/sievekit" target="_blank" rel="noopener">npm</a>
+  </nav>
+</footer>
+
+</body>
+</html>
