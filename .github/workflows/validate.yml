@@ -17,6 +17,8 @@ jobs:
         run: node bin/cli.js validate
       - name: Run CLI self-tests
         run: npm test
+      - name: Security-scan skill content
+        run: node scripts/security-scan.mjs
       - name: Check AGENTS.md stays thin
         run: |
           lines=$(wc -l < AGENTS.md)
