@@ -27,8 +27,16 @@ switch (cmd) {
   case "init": {
     // Default: interactive onboarding (interview + registry-recommended shortlist).
     // --all / --offline: old behavior, copy the whole bundled catalog, no prompts,
-    // no network — for CI/scripted use.
-    const skipOnboard = rest.includes("--all") || rest.includes("--offline");
+    // no network — for CI/scripted use. Also auto-detected whenever stdin isn't a
+    // TTY — piped input, or invoked by a coding agent's own tool call rather than
+    // a human typing at a terminal. The interactive interview can't get answers
+    // from a stream nobody is writing to, and would otherwise hang forever
+    // waiting for input that will never arrive.
+    const explicitOffline = rest.includes("--all") || rest.includes("--offline");
+    const skipOnboard = explicitOffline || !process.stdin.isTTY;
+    if (skipOnboard && !explicitOffline) {
+      console.log("No interactive terminal detected — skipping the interview, installing the full bundled catalog.\n");
+    }
     const scriptArgs = rest.filter((a) => a !== "--all" && a !== "--offline");
     run(skipOnboard ? "scripts/init.mjs" : "scripts/onboard.mjs", scriptArgs);
     break;

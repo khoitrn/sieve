@@ -45,6 +45,8 @@ That command asks two short questions (new idea or existing project? any focus a
 
 No internet, or the registry happens to be down? `init` automatically falls back to installing the full built-in library instead — Sieve still works either way, it's just plain files either way. If you'd rather skip the two questions and always get the full library, run `npx sievekit init --all` (or `--offline`) instead.
 
+Invoked by a coding agent's own tool call rather than a human at a terminal — no TTY attached to stdin? `init` detects that automatically and takes the same `--all` path, no prompts, no hang waiting on input nobody's going to send. An agent can run plain `npx sievekit init` on your behalf and it just works.
+
 ### 2. The dashboard — see it reflected, browse, or connect more
 
 [sieve-dashboard](https://github.com/khoitrn/sieve-dashboard) is a browser UI, self-hosted — see its [Setup guide](https://github.com/khoitrn/sieve-dashboard#setup-run-your-own-copy), about 15 minutes.
