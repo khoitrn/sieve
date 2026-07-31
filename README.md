@@ -29,15 +29,9 @@ Without Sieve, you either re-explain your conventions to every AI tool separatel
 
 ## Install
 
-Two separate ways in — pick whichever fits what you're doing, or use both, they don't depend on each other:
+Start with the CLI — it's what actually sets Sieve up in a project. The dashboard is a separate, optional piece, but it's not unrelated: once your project's on GitHub, the dashboard's **Dashboard** tab reflects exactly what the CLI installed there — which skills are active, with real usage evidence pulled straight from your own project.
 
-|  | In your terminal | In your browser |
-|---|---|---|
-| **What** | `npx sievekit init` — sets Sieve up inside a project | [sieve-dashboard](https://github.com/khoitrn/sieve-dashboard) — a web UI you host yourself |
-| **Needs** | [Node.js](https://nodejs.org) 18+ (nothing else) | A one-time self-host setup, ~15 minutes |
-| **Good for** | Actually adding Sieve to a project | Browsing the library visually, connecting your own skills, once it's running |
-
-### Option A: the CLI
+### 1. The CLI — sets Sieve up in your project
 
 Open a terminal in your project folder and run:
 
@@ -51,9 +45,13 @@ That command asks two short questions (new idea or existing project? any focus a
 
 No internet, or the registry happens to be down? `init` automatically falls back to installing the full built-in library instead — Sieve still works either way, it's just plain files either way. If you'd rather skip the two questions and always get the full library, run `npx sievekit init --all` (or `--offline`) instead.
 
-### Option B: the dashboard
+### 2. The dashboard — see it reflected, browse, or connect more
 
-[sieve-dashboard](https://github.com/khoitrn/sieve-dashboard) is a browser UI for browsing the skill library, connecting your own repos, or authoring skills by hand — no code editor needed. It's meant to be self-hosted: your own copy, your own registry, your own data, not a service you sign into somewhere. Its [Setup guide](https://github.com/khoitrn/sieve-dashboard#setup-run-your-own-copy) walks through deploying your own in about 15 minutes.
+[sieve-dashboard](https://github.com/khoitrn/sieve-dashboard) is a browser UI, self-hosted — see its [Setup guide](https://github.com/khoitrn/sieve-dashboard#setup-run-your-own-copy), about 15 minutes.
+
+Once your project is on a **public** GitHub repo, point the dashboard's **Dashboard** tab at `owner/repo` and it shows exactly what's active there, no sign-in needed: guardrails marked "always active," every catalog skill's real mention count and last-used date pulled straight from your project's own `HISTORY.jsonl`, and a click-through to that skill's actual instructions plus the evidence lines behind the count. This isn't a mock or a static summary — it's read live from your repo on every load.
+
+Sign in and the other tabs open up too — Library (your wider skill pool: curated + connected + custom, not tied to one project), Sources (connect other repos), Custom (author a skill by hand) — useful on their own, independent of any single project's CLI install.
 
 ## See it in action
 
