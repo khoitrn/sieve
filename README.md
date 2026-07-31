@@ -29,19 +29,31 @@ Without Sieve, you either re-explain your conventions to every AI tool separatel
 
 ## Install
 
-You need [Node.js](https://nodejs.org) 18 or later — that's the only prerequisite, and if you can already run an AI coding assistant on your machine, you very likely have it. Nothing else to download or set up. Open a terminal in your project folder and run:
+Two separate ways in — pick whichever fits what you're doing, or use both, they don't depend on each other:
+
+|  | In your terminal | In your browser |
+|---|---|---|
+| **What** | `npx sievekit init` — sets Sieve up inside a project | [sieve-dashboard](https://github.com/khoitrn/sieve-dashboard) — look at skills before installing anything |
+| **Needs** | [Node.js](https://nodejs.org) 18+ (nothing else) | Nothing — just a browser |
+| **Good for** | Actually adding Sieve to a project | Browsing the library, checking if a repo already uses Sieve, connecting your own skills |
+
+### Option A: the CLI
+
+Open a terminal in your project folder and run:
 
 ```sh
 npx sievekit init
 ```
 
-`npx` fetches Sieve, runs it once, and doesn't leave anything installed globally on your computer — safe to run any time, and there's no separate "download" step to do first.
+`npx` fetches Sieve, runs it once, and doesn't leave anything installed globally on your computer — safe to run any time, no separate "download" step first.
 
 That command asks two short questions (new idea or existing project? any focus areas?), checks the [Sieve registry](https://github.com/khoitrn/sieve-registry) for which skills fit your answers, and writes just that shortlist into your project, plus a small set of rules that are always on. Then open your AI coding assistant in that same folder and describe what you want to build — nothing else to configure.
 
-Prefer to look around in a browser before touching a terminal? [sieve-dashboard](https://github.com/khoitrn/sieve-dashboard) is a free hosted site at [sieve.khoitrn.com](https://sieve.khoitrn.com) where you can browse the whole skill library first — no install, no sign-in required to look.
-
 No internet, or the registry happens to be down? `init` automatically falls back to installing the full built-in library instead — Sieve still works either way, it's just plain files either way. If you'd rather skip the two questions and always get the full library, run `npx sievekit init --all` (or `--offline`) instead.
+
+### Option B: the dashboard
+
+A maintainer-run demo lives at [sieve.khoitrn.com](https://sieve.khoitrn.com) — open it, no install and no sign-in required just to look around the skill library. It's a personal instance, not an official hosted service, so if you sign in there to connect your own repo or author a skill, see [where that data actually lives](https://github.com/khoitrn/sieve-dashboard#where-does-your-data-live) before relying on it — or run your own copy in about 15 minutes.
 
 ## See it in action
 
