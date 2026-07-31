@@ -89,25 +89,20 @@ async function ask(rl, question) {
   return (await rl.question(question)).trim();
 }
 
-async function runInterview() {
-  const rl = createInterface({ input: process.stdin, output: process.stdout });
-  try {
-    console.log("A couple of questions to pick the right skills — press Enter to skip any of them.\n");
-    let modeAnswer = "";
-    while (modeAnswer !== "new" && modeAnswer !== "existing") {
-      modeAnswer = (await ask(rl, "Is this a new idea or an existing project? [new/existing] ")).toLowerCase();
-      if (modeAnswer.startsWith("n")) modeAnswer = "new";
-      else if (modeAnswer.startsWith("e")) modeAnswer = "existing";
-    }
-    const focusRaw = await ask(rl, "Any specific focus areas (comma-separated, e.g. \"maintenance, testing\")? ");
-    const focus = focusRaw
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-    return { mode: modeAnswer === "new" ? "new-idea" : "existing-project", focus };
-  } finally {
-    rl.close();
+async function runInterview(rl) {
+  console.log("A couple of questions to pick the right skills — press Enter to skip any of them.\n");
+  let modeAnswer = "";
+  while (modeAnswer !== "new" && modeAnswer !== "existing") {
+    modeAnswer = (await ask(rl, "Is this a new idea or an existing project? [new/existing] ")).toLowerCase();
+    if (modeAnswer.startsWith("n")) modeAnswer = "new";
+    else if (modeAnswer.startsWith("e")) modeAnswer = "existing";
   }
+  const focusRaw = await ask(rl, "Any specific focus areas (comma-separated, e.g. \"maintenance, testing\")? ");
+  const focus = focusRaw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return { mode: modeAnswer === "new" ? "new-idea" : "existing-project", focus };
 }
 
 function fallbackToFullCatalog(reason) {
@@ -125,7 +120,62 @@ function fallbackToFullCatalog(reason) {
   return { source: "offline-fallback", assignedSkills: [] };
 }
 
-async function pullFromRegistry(answers) {
+// Shows the guardrails (always installed, not up for a vote) plus the
+// recommended catalog skills, then lets the user accept as-is, decline the
+// catalog additions (guardrails still install), or type more names to pull
+// in — matching the registry's own "recommended, not forced" design.
+async function confirmSelection(rl, choice, bySkillName) {
+  const guardrailNames = new Set(choice.guardrails);
+  const catalogNames = new Set(
+    [...choice.recommended, ...(choice.bundle?.skill_names ?? [])].filter((n) => !guardrailNames.has(n)),
+  );
+
+  if (guardrailNames.size) {
+    console.log(`\nAlways-on guardrails (installed regardless): ${[...guardrailNames].join(", ")}`);
+  }
+
+  for (;;) {
+    const rows = [...catalogNames]
+      .map((n) => bySkillName.get(n))
+      .filter(Boolean)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    console.log(`\nRecommended skills (${rows.length}):`);
+    if (rows.length === 0) console.log("  (none beyond the guardrails above)");
+    for (const skill of rows) {
+      console.log(`  - ${skill.name}  [${skill.category}]${skill.description ? `  ${skill.description}` : ""}`);
+    }
+
+    const answer = (
+      await ask(rl, "\nInstall these? [Y/n, or type skill names to add, comma-separated] ")
+    ).trim();
+
+    if (answer === "" || /^y(es)?$/i.test(answer)) {
+      return new Set([...guardrailNames, ...catalogNames]);
+    }
+    if (/^n(o)?$/i.test(answer)) {
+      console.log("Skipping the recommended list — installing guardrails only.");
+      return guardrailNames;
+    }
+
+    const added = answer
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    let matched = false;
+    for (const name of added) {
+      if (!bySkillName.has(name)) {
+        console.log(`note  no skill named "${name}" in the registry — skipping`);
+        continue;
+      }
+      catalogNames.add(name);
+      matched = true;
+    }
+    if (!matched) console.log('note  nothing matched — try again, or press Enter/"y" to install the list above.');
+  }
+}
+
+async function pullFromRegistry(answers, rl) {
   const [skills, choice] = await Promise.all([
     fetchRegistry("/api/skills", { method: "GET" }),
     fetchRegistry("/api/recommend", {
@@ -139,8 +189,8 @@ async function pullFromRegistry(answers) {
     console.log(`bundle  matched "${choice.bundle.name}" — ${choice.bundle.description}`);
   }
 
-  const wanted = new Set([...choice.guardrails, ...choice.recommended, ...(choice.bundle?.skill_names ?? [])]);
   const bySkillName = new Map(skills.map((s) => [s.name, s]));
+  const wanted = await confirmSelection(rl, choice, bySkillName);
   const installed = [];
   const indexEntries = [];
 
@@ -190,21 +240,26 @@ copyAsset(pkgRoot, target, "AGENTS.md", force);
 copyAsset(pkgRoot, target, "templates", force);
 seedProjectFiles(pkgRoot, target, force);
 
-const answers = await runInterview();
-
-if (detectStack) {
-  const stackTags = detectStackTags(target);
-  if (stackTags.length) {
-    console.log(`detect  stack signals: ${stackTags.join(", ")}`);
-    answers.focus = [...new Set([...answers.focus, ...stackTags])];
-  }
-}
-
+const rl = createInterface({ input: process.stdin, output: process.stdout });
 let result;
 try {
-  result = await pullFromRegistry(answers);
-} catch (err) {
-  result = fallbackToFullCatalog(err.message);
+  const answers = await runInterview(rl);
+
+  if (detectStack) {
+    const stackTags = detectStackTags(target);
+    if (stackTags.length) {
+      console.log(`detect  stack signals: ${stackTags.join(", ")}`);
+      answers.focus = [...new Set([...answers.focus, ...stackTags])];
+    }
+  }
+
+  try {
+    result = await pullFromRegistry(answers, rl);
+  } catch (err) {
+    result = fallbackToFullCatalog(err.message);
+  }
+} finally {
+  rl.close();
 }
 
 const projectId = loadOrCreateProjectId(target);

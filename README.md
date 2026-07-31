@@ -41,7 +41,7 @@ npx sievekit init
 
 `npx` fetches Sieve, runs it once, and doesn't leave anything installed globally on your computer — safe to run any time, no separate "download" step first.
 
-That command asks two short questions (new idea or existing project? any focus areas?), checks the [Sieve registry](https://github.com/khoitrn/sieve-registry) for which skills fit your answers, and writes just that shortlist into your project, plus a small set of rules that are always on. Then open your AI coding assistant in that same folder and describe what you want to build — nothing else to configure.
+That command asks two short questions (new idea or existing project? any focus areas?), checks the [Sieve registry](https://github.com/khoitrn/sieve-registry) for which skills fit your answers, then shows you the recommended list before writing anything — press Enter to accept it, type skill names (comma-separated) to add more, or `n` to install just the always-on guardrails and skip the rest. Then open your AI coding assistant in that same folder and describe what you want to build — nothing else to configure.
 
 No internet, or the registry happens to be down? `init` automatically falls back to installing the full built-in library instead — Sieve still works either way, it's just plain files either way. If you'd rather skip the two questions and always get the full library, run `npx sievekit init --all` (or `--offline`) instead.
 
