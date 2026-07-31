@@ -33,9 +33,9 @@ Two separate ways in — pick whichever fits what you're doing, or use both, the
 
 |  | In your terminal | In your browser |
 |---|---|---|
-| **What** | `npx sievekit init` — sets Sieve up inside a project | [sieve-dashboard](https://github.com/khoitrn/sieve-dashboard) — look at skills before installing anything |
-| **Needs** | [Node.js](https://nodejs.org) 18+ (nothing else) | Nothing — just a browser |
-| **Good for** | Actually adding Sieve to a project | Browsing the library, checking if a repo already uses Sieve, connecting your own skills |
+| **What** | `npx sievekit init` — sets Sieve up inside a project | [sieve-dashboard](https://github.com/khoitrn/sieve-dashboard) — a web UI you host yourself |
+| **Needs** | [Node.js](https://nodejs.org) 18+ (nothing else) | A one-time self-host setup, ~15 minutes |
+| **Good for** | Actually adding Sieve to a project | Browsing the library visually, connecting your own skills, once it's running |
 
 ### Option A: the CLI
 
@@ -53,7 +53,7 @@ No internet, or the registry happens to be down? `init` automatically falls back
 
 ### Option B: the dashboard
 
-A maintainer-run demo lives at [sieve.khoitrn.com](https://sieve.khoitrn.com) — open it, no install and no sign-in required just to look around the skill library. It's a personal instance, not an official hosted service, so if you sign in there to connect your own repo or author a skill, see [where that data actually lives](https://github.com/khoitrn/sieve-dashboard#where-does-your-data-live) before relying on it — or run your own copy in about 15 minutes.
+[sieve-dashboard](https://github.com/khoitrn/sieve-dashboard) is a browser UI for browsing the skill library, connecting your own repos, or authoring skills by hand — no code editor needed. It's meant to be self-hosted: your own copy, your own registry, your own data, not a service you sign into somewhere. Its [Setup guide](https://github.com/khoitrn/sieve-dashboard#setup-run-your-own-copy) walks through deploying your own in about 15 minutes.
 
 ## See it in action
 
@@ -165,7 +165,7 @@ Sieve is three repos on purpose, each with a different job:
 
 - **sieve** (this repo) — the npm package. Zero runtime deps, works offline, the source of truth for `AGENTS.md` and the bundled catalog.
 - **[sieve-registry](https://github.com/khoitrn/sieve-registry)** — the Cloudflare Worker + D1 API `npx sievekit init`/`add`/`check --updates` talk to for recommendations, connected sources, and hand-authored skills. The one stateful piece.
-- **[sieve-dashboard](https://github.com/khoitrn/sieve-dashboard)** — the hosted, read-only UI on top of the registry at [sieve.khoitrn.com](https://sieve.khoitrn.com): browse your skill pool, connect repos, author skills, or inspect any public repo's Sieve setup.
+- **[sieve-dashboard](https://github.com/khoitrn/sieve-dashboard)** — a self-hosted browser UI on top of the registry: browse your skill pool, connect repos, author skills, or inspect any public repo's Sieve setup. Deploy your own copy — see its [Setup guide](https://github.com/khoitrn/sieve-dashboard#setup-run-your-own-copy).
 
 ## Contributing
 
