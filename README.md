@@ -1,8 +1,8 @@
 # Sieve
 
-A portable, file-based agent protocol and skill library that installs in one command and works the same across Claude Code, Codex, Cursor, and other coding agents.
+Sieve teaches your AI coding assistant good habits — test before you claim it works, review before moving on, verify before calling it done — plus a growing library of focused how-to guides ("skills") it reaches for only when a task actually needs one. One command sets it up, and it works the same whether you use Claude Code, Codex, Cursor, or something else.
 
-If you use an AI coding assistant, Sieve gives it a consistent set of ground rules (test first, review before moving on, verify before declaring done) and a growing library of skills it can pull in only when a task needs them — instead of you re-explaining your conventions to every tool separately, or a single giant instructions file every agent has to read in full on every task.
+Without Sieve, you either re-explain your conventions to every AI tool separately, or hand every tool one giant instructions file it has to reread in full on every single task. Sieve keeps the rules in one place and only loads the extra detail that's relevant right now.
 
 ![npm version](https://img.shields.io/npm/v/sievekit)
 ![npm downloads](https://img.shields.io/npm/dm/sievekit)
@@ -10,34 +10,42 @@ If you use an AI coding assistant, Sieve gives it a consistent set of ground rul
 ![node](https://img.shields.io/badge/node-%3E%3D18-green)
 ![license](https://img.shields.io/badge/license-MIT-blue)
 
+**Is this for me?** Sieve is for anyone already coding with an AI assistant — Claude Code, Cursor, Codex, Copilot, and 20+ others are all supported. You'll need Node.js installed and a terminal to run one command; you don't need to know how to code yourself, just how to open a terminal in your project folder. If you don't already use one of those AI coding tools, Sieve has nothing to do yet — it configures tools you already have, it doesn't replace them.
+
 ## Contents
 
 - [Install](#install)
 - [See it in action](#see-it-in-action)
 - [Why Sieve](#why-sieve)
 - [First 60 seconds](#first-60-seconds)
+- [A few words you'll see](#a-few-words-youll-see)
 - [How it works](#how-it-works)
 - [Commands](#commands)
 - [What is inside](#what-is-inside)
 - [Creating a skill](#creating-a-skill)
+- [Related projects](#related-projects)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Install
 
-Requires Node.js 18 or later. Scaffold Sieve into any project with one command:
+You need [Node.js](https://nodejs.org) 18 or later — that's the only prerequisite, and if you can already run an AI coding assistant on your machine, you very likely have it. Nothing else to download or set up. Open a terminal in your project folder and run:
 
 ```sh
 npx sievekit init
 ```
 
-That asks two short questions (new idea or existing project, any focus areas), asks the [Sieve registry](https://github.com/khoitrn/sieve-registry) which skills fit, and installs just that shortlist plus the always-on guardrails — not the whole catalog. It seeds your project state and writes pointer files for whichever agents you use. Then open your coding agent in that folder and describe what you want to build.
+`npx` fetches Sieve, runs it once, and doesn't leave anything installed globally on your computer — safe to run any time, and there's no separate "download" step to do first.
 
-No registry, no problem: if it's unreachable (offline, self-hosting, whatever), `init` falls back to installing the full bundled catalog automatically — Sieve stays a plain, portable, file-based layer either way. Prefer that path outright, e.g. for CI or scripted use? `npx sievekit init --all` (or `--offline`) skips the interview and the network call entirely.
+That command asks two short questions (new idea or existing project? any focus areas?), checks the [Sieve registry](https://github.com/khoitrn/sieve-registry) for which skills fit your answers, and writes just that shortlist into your project, plus a small set of rules that are always on. Then open your AI coding assistant in that same folder and describe what you want to build — nothing else to configure.
+
+Prefer to look around in a browser before touching a terminal? [sieve-dashboard](https://github.com/khoitrn/sieve-dashboard) is a free hosted site at [sieve.khoitrn.com](https://sieve.khoitrn.com) where you can browse the whole skill library first — no install, no sign-in required to look.
+
+No internet, or the registry happens to be down? `init` automatically falls back to installing the full built-in library instead — Sieve still works either way, it's just plain files either way. If you'd rather skip the two questions and always get the full library, run `npx sievekit init --all` (or `--offline`) instead.
 
 ## See it in action
 
-A real `npx sievekit init --offline` run, so you know exactly what lands in your project before you try it:
+Curious what actually shows up in your project folder? Here's a real `npx sievekit init --offline` run, so you know exactly what lands before you try it — nothing here is hidden or surprising:
 
 ```
 Installing Sieve (full catalog) into your-project/
@@ -64,33 +72,43 @@ Sieve is ready in your-project/.
 Open your coding agent there and describe what you want to build.
 ```
 
-Every "write" line is a thin pointer back to `AGENTS.md` for agents that read a different filename — none of them duplicate its content.
+Files with `write` next to them (`CLAUDE.md`, `GEMINI.md`, etc.) are just one-line pointers back to `AGENTS.md` for tools that expect their own filename — none of them copy the rules, they just point at the one real copy. That way you only ever edit the rules in one place.
 
 ## Why Sieve
 
-- Agent memory and enforcement are vendor-locked. Your working judgment should not be. Sieve keeps the durable layer (protocol, guardrails, skills, state) in plain files you own, and treats each vendor's native machinery as a removable enhancement.
-- One protocol, every agent. `AGENTS.md` is the source of truth, read natively by Codex, Cursor, Copilot, Gemini CLI, Aider, Windsurf, Zed, and 20+ others. For the few agents that read a different filename (Claude Code, Gemini CLI, Copilot, Cursor, Windsurf), `sieve bridge` writes a thin pointer back to `AGENTS.md`, so you never maintain the same rules twice.
-- Grows by use, not by design. Skills are proposed, validated, and promoted as real work surfaces them. The catalog scales without every session paying for the whole thing.
+- **You keep the rules, not the vendor.** Every AI coding tool has its own way of remembering instructions, and that memory disappears if you switch tools. Sieve keeps your actual rules — how you like tests written, how reviews should go, what "done" means — in plain text files that live in your project and belong to you, not locked inside any one tool.
+- **Write the rules once, every tool reads them.** `AGENTS.md` is a plain-text file that most AI coding tools (Codex, Cursor, Copilot, Gemini CLI, and 20+ others) already read on their own. For the few that look for a different filename (like Claude Code), Sieve writes a one-line pointer file so they find the same rules — you never end up maintaining two copies that drift apart.
+- **The library grows from real use, not guesswork.** New skills get added when real work actually needs them, get checked over, and only then join the library — so it grows to match how people really use it, instead of every project shipping with everything anyone might ever need.
 
 ## First 60 seconds
 
-1. Drop `AGENTS.md`, `CLAUDE.md`, and `skills/` into a repo.
-2. Open your agent and describe what you want to build.
-3. The agent asks whether this is a new idea or an existing project, then loads only the skills the task needs.
+1. Run `npx sievekit init` (see [Install](#install) above) — this drops a few files into your project.
+2. Open your AI coding assistant in that same folder and describe what you want to build, same as always.
+3. It'll ask whether this is a brand-new idea or work on an existing project, then quietly pulls in only the specific guides it needs for that task — you don't have to pick anything yourself.
+
+## A few words you'll see
+
+Sieve tries to avoid jargon, but a few words come up repeatedly:
+
+- **Agent** — your AI coding assistant itself (Claude Code, Cursor, Codex, Copilot, whichever you use).
+- **Skill** — one short, focused how-to guide for a specific kind of task (e.g. "how to review code," "how to debug systematically"). Your agent only reads the ones relevant to what you're doing right now.
+- **Guardrail** — a rule that's always on, no matter the task (e.g. "write a test before you write the fix"). Unlike skills, guardrails are never skipped without you being asked first.
+- **Catalog** — the full collection of available skills to choose from.
+- **Registry** — the online service Sieve checks to recommend which skills fit your project. If it's unreachable, Sieve just uses its own built-in catalog instead.
 
 ## How it works
 
-Three load tiers keep token cost flat as the catalog grows:
+The short version: not everything loads at once, so your agent isn't rereading a giant file on every single task.
 
-- **Always loaded (tiny):** the fork question and guardrail names, in `AGENTS.md`, under 100 lines.
-- **On the chosen path only:** new idea loads a grill (a short structured Q&A that turns a rough idea into an agreed plan); existing project reads state and confirms it.
-- **Lazy, per task:** individual `SKILL.md` files load only when the shortlist selects them.
+- **Always on, and tiny:** the basic question ("new idea or existing project?") and the guardrail rules — under 100 lines total, in `AGENTS.md`.
+- **Loaded once, based on your answer:** a short new-idea questionnaire, or a quick summary of your existing project's state.
+- **Loaded only when needed:** the individual skill guides — each one is its own small file, and only the ones relevant to the current task get read at all.
 
-Guardrails (test-driven development, code review, verification) stay active by default. Anything that bypasses a guardrail or improvises past the shortlist hits an approval gate and asks first.
+Guardrails (test-first development, code review, verification before declaring done) stay on by default. If your agent ever wants to skip one, or do something outside the recommended skills, it's supposed to stop and ask you first rather than deciding on its own.
 
 ## Commands
 
-Everything below runs as `npx sievekit <command>` in a project where Sieve is installed (or `sieve <command>` if installed globally).
+Everything from here on is reference material for anyone who wants more control — you don't need any of it just to get started. Every command below runs as `npx sievekit <command>` in a project where Sieve is installed (or `sieve <command>` if installed globally).
 
 | Command | What it does |
 |---|---|
@@ -128,6 +146,14 @@ Draft `staging/<name>/SKILL.md` with `name` and `description` frontmatter (the d
 ```sh
 npx sievekit validate staging/<name>/SKILL.md
 ```
+
+## Related projects
+
+Sieve is three repos on purpose, each with a different job:
+
+- **sieve** (this repo) — the npm package. Zero runtime deps, works offline, the source of truth for `AGENTS.md` and the bundled catalog.
+- **[sieve-registry](https://github.com/khoitrn/sieve-registry)** — the Cloudflare Worker + D1 API `npx sievekit init`/`add`/`check --updates` talk to for recommendations, connected sources, and hand-authored skills. The one stateful piece.
+- **[sieve-dashboard](https://github.com/khoitrn/sieve-dashboard)** — the hosted, read-only UI on top of the registry at [sieve.khoitrn.com](https://sieve.khoitrn.com): browse your skill pool, connect repos, author skills, or inspect any public repo's Sieve setup.
 
 ## Contributing
 
